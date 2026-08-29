@@ -12,9 +12,12 @@ def test_health_endpoint():
     
     assert response.status_code == 200
     data = response.json()
-    assert data["status"] == "online"
+    assert data["status"] in ["online", "healthy"]
+    assert data["database"] == "healthy"
+    assert data["model"]["status"] == "loaded"
     assert "xgboost-v1" in data["model_version"]
     print(f"\n[TEST PASS] GET /api/health - {duration_ms:.2f} ms")
+
 
 def test_dashboard_summary_endpoint():
     start = time.time()

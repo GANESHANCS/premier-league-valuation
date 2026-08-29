@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pl_valuedge_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - PROJECT_NAME=Premier League Valuation Intelligence
+      - VERSION=1.0.0
+      - API_PREFIX=/api
+      - DATABASE_URL=postgresql://valuedge_user:valuedge_password@db:5432/valuedge_db
+      - MODEL_PATH=data/processed/ml/best_model.joblib
+      - MODEL_VERSION=xgboost-v1
+      - CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: pl_valuedge_postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=valuedge_user
+      - POSTGRES_PASSWORD=valuedge_password
+      - POSTGRES_DB=valuedge_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U valuedge_user -d valuedge_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

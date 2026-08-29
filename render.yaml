@@ -1,0 +1,34 @@
+services:
+  # FastAPI Backend & ML Engine Service
+  - type: web
+    name: pl-valuedge-backend
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python scripts/load_database.py && uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /api/health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: PROJECT_NAME
+        value: Premier League Valuation Intelligence
+      - key: VERSION
+        value: 1.0.0
+      - key: API_PREFIX
+        value: /api
+      - key: MODEL_PATH
+        value: data/processed/ml/best_model.joblib
+      - key: MODEL_VERSION
+        value: xgboost-v1
+      - key: CORS_ORIGINS
+        value: "https://pl-valuedge.onrender.com,http://localhost:3000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pl-valuedge-db
+          property: connectionString
+
+databases:
+  # Managed PostgreSQL Database
+  - name: pl-valuedge-db
+    databaseName: valuedge_db
+    user: valuedge_user
+    plan: free

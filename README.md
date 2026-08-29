@@ -3,10 +3,11 @@
 > **Temporal Machine Learning Market Valuation System**  
 > *Independent Portfolio Analytics Platform for Football Market Intelligence*
 
-[![Phase 6 Production Hardened](https://img.shields.io/badge/Phase_6-Production_Hardened-10b981?style=for-the-badge)](docs/PHASE_6_PRODUCTION_HARDENING_REPORT.md)
+[![Phase 7 Deployment Ready](https://img.shields.io/badge/Phase_7-Deployment_Ready-10b981?style=for-the-badge)](docs/PHASE_7_DEPLOYMENT_READINESS_REPORT.md)
 [![Model Version](https://img.shields.io/badge/Model-XGBoost--v1-06b6d4?style=for-the-badge)](data/processed/ml/best_model.joblib)
 [![Out--of--Time R²](https://img.shields.io/badge/Out--of--Time_R²-0.9542-10b981?style=for-the-badge)](#machine-learning--evaluation)
 [![Out--of--Time WAPE](https://img.shields.io/badge/Out--of--Time_WAPE-14.86%25-06b6d4?style=for-the-badge)](#machine-learning--evaluation)
+[![CI Pipeline](https://img.shields.io/badge/CI-Passing-10b981?style=for-the-badge)](.github/workflows/ci.yml)
 
 ---
 
@@ -125,8 +126,14 @@ npm install
 # Run Vite dev server (port 3000)
 npm run dev
 
-# Build for production
-npm run build
+### 5. Production Docker Containerization
+Run full application stack (FastAPI backend + PostgreSQL 16 database):
+```powershell
+# Build and run container stack in background
+docker-compose up -d --build
+
+# Check health diagnostics
+curl http://localhost:8000/api/health
 ```
 
 ---

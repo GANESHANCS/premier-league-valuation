@@ -1,0 +1,81 @@
+name: PL ValuEdge Production CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-tests:
+    name: Backend API & Health Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Backend Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Backend Pytest Suite
+        run: |
+          python -m pytest backend/tests/test_api.py -v
+
+  frontend-build:
+    name: Frontend TypeScript & Vite Production Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run Production Build
+        working-directory: ./frontend
+        run: npm run build
+
+  git-hygiene-audit:
+    name: Git Tracked Files Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Audit Untracked Binaries and Node Modules
+        run: |
+          echo "[*] Checking for illegal tracked data binaries..."
+          DATA_FILES=$(git ls-files data/*.db data/processed/*.csv)
+          if [ -n "$DATA_FILES" ]; then
+            echo "[!] ERROR: Large data files are tracked in Git:"
+            echo "$DATA_FILES"
+            exit 1
+          fi
+
+          echo "[*] Checking for illegal tracked node_modules..."
+          NODE_FILES=$(git ls-files frontend/node_modules)
+          if [ -n "$NODE_FILES" ]; then
+            echo "[!] ERROR: node_modules files are tracked in Git index."
+            exit 1
+          fi
+
+          echo "[OK] Git hygiene audit passed! 0 data binaries or node_modules tracked."
