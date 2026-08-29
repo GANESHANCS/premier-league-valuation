@@ -13,3 +13,6 @@ data/raw/
 .DS_Store
 .idea/
 .vscode/
+# Generated datasets / local database
+data/pl_valuation.db
+data/processed/
