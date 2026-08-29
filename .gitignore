@@ -16,7 +16,11 @@ data/raw/
 
 # Generated datasets / local database
 data/pl_valuation.db
-data/processed/
+data/processed/*
+!data/processed/ml/
+data/processed/ml/*
+!data/processed/ml/best_model.joblib
+
 
 # Frontend Node Modules & Build Output
 frontend/node_modules/

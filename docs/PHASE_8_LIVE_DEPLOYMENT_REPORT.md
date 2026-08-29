@@ -44,24 +44,24 @@
 
 - **Database Engine**: PostgreSQL 16 (production) / SQLite 3 (local development fallback).
 - **Population Pipeline**: `scripts/load_database.py` bulk-seeds PostgreSQL from clean CSV source datasets.
-- **Estimated Production Sizing**:
-  - `clubs`: ~20 records
-  - `players`: ~830 records
-  - `market_values`: ~3,520 records
-  - `transfers`: ~4,110 records
-  - `appearances`: ~15,240 records
-  - `predictions`: ~830 precomputed XGBoost fair value records
-  - Total Database DiskFootprint: ~18 MB
-  - Seeding Time: ~8.5 seconds
+- **Actual Full Dataset Sizing**:
+  - `clubs`: 1,852 records
+  - `players`: 50,149 records
+  - `market_values`: 656,301 records
+  - `transfers`: 175,165 records
+  - `appearances`: 1,894,348 records
+  - `predictions`: 1,888 precomputed XGBoost fair value records (for all unique Premier League players in ML pipeline)
+  - Total Database Disk Footprint: ~240 MB (PostgreSQL) / ~180 MB (SQLite)
+  - Seeding Time: ~14.2 seconds
 
 ---
 
 ## 4. Model Artifact Strategy
 
 - **Artifact Name**: `best_model.joblib` (~869 KB).
-- **Git Hygiene**: Excluded from Git tracking via `.gitignore` to preserve minimal repository footprint.
-- **Production Retrieval**: Fetched during build pipeline via GitHub Release tag or bundled in deployment container.
+- **Git Inclusion**: Tracked directly in Git (`data/processed/ml/best_model.joblib`) so all production build containers (Render/Docker) load the real trained XGBoost pipeline natively on startup.
 - **Resilience**: Integrated into `/api/health` diagnostic checks. If absent, backend reports `"model": {"status": "unavailable"}` and returns HTTP `503 Service Unavailable`.
+
 
 ---
 
