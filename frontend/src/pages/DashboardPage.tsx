@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, Users, DollarSign, Activity, Cpu, ArrowRight } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, DollarSign, Activity, Cpu, ArrowRight, ShieldCheck } from 'lucide-react';
 import { fetchDashboardSummary } from '../api/client';
 import { DashboardSummary } from '../types/api';
 import { AnimatedHeadline } from '../components/motion/AnimatedHeadline';
@@ -42,7 +42,7 @@ export const DashboardPage: React.FC = () => {
 
   if (error || !summary) {
     return (
-      <div className="glass-panel p-8 rounded-3xl border border-signal-crimson/30 text-center space-y-4">
+      <div className="p-8 rounded-3xl bg-[#080c12]/80 backdrop-blur-md border border-signal-crimson/30 text-center space-y-4">
         <div className="w-12 h-12 rounded-2xl bg-signal-crimson/10 text-signal-crimson mx-auto flex items-center justify-center">
           <Activity className="w-6 h-6 animate-pulse" />
         </div>
@@ -72,48 +72,55 @@ export const DashboardPage: React.FC = () => {
       {/* Live Broadcast Ticker */}
       <LiveTicker items={tickerItems} />
 
-      {/* Cinematic Hero Section */}
-      <div className="relative overflow-hidden glass-panel p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-signal-cyan/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none" />
-        <div className="relative z-10 space-y-6 max-w-4xl">
-          <div className="flex items-center space-x-3">
-            <span className="px-3 py-1 rounded-full bg-signal-cyan/15 border border-signal-cyan/30 text-signal-cyan text-xs font-mono font-bold tracking-widest uppercase">
-              MODEL: {summary.model_version}
-            </span>
-            <span className="px-3 py-1 rounded-full bg-signal-emerald/15 border border-signal-emerald/30 text-signal-emerald text-xs font-mono font-bold tracking-widest uppercase">
-              TEST WAPE: {summary.model_out_of_time_wape_pct}%
-            </span>
+      {/* Cinematic Hero Section — Positioned to Left/Center to reveal Footballer on Right */}
+      <div className="relative p-8 md:p-12 rounded-3xl bg-[#080c12]/60 backdrop-blur-sm border border-white/10 shadow-2xl">
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Left Column: Hero Content & Typography */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-3 py-1 rounded-full bg-signal-cyan/15 border border-signal-cyan/30 text-signal-cyan text-[11px] font-mono font-bold tracking-widest uppercase flex items-center space-x-1.5">
+                <Cpu className="w-3.5 h-3.5" />
+                <span>MODEL: {summary.model_version}</span>
+              </span>
+              <span className="px-3 py-1 rounded-full bg-signal-emerald/15 border border-signal-emerald/30 text-signal-emerald text-[11px] font-mono font-bold tracking-widest uppercase flex items-center space-x-1.5">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>TEST WAPE: {summary.model_out_of_time_wape_pct}%</span>
+              </span>
+            </div>
+
+            <AnimatedHeadline
+              categoryTag="VALUATION INTELLIGENCE PLATFORM"
+              mainTitle="PREMIER LEAGUE"
+              subTitle="VALUATION INTELLIGENCE"
+              description="Machine-learning player market valuation built from historical market values, performance statistics, transfer movements, and temporal features using strict anti-leakage governance."
+            />
+
+            <div className="pt-2 flex flex-wrap gap-4 text-xs font-mono">
+              <button
+                onClick={() => navigate('/players')}
+                className="px-6 py-3 rounded-xl bg-signal-cyan/20 border border-signal-cyan/40 text-signal-cyan font-bold hover:bg-signal-cyan/30 transition flex items-center space-x-2"
+              >
+                <span>EXPLORE PLAYERS</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => navigate('/model-analytics')}
+                className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition"
+              >
+                <span>MODEL METRICS</span>
+              </button>
+            </div>
           </div>
 
-          <AnimatedHeadline
-            categoryTag="VALUATION INTELLIGENCE PLATFORM"
-            mainTitle="PREMIER LEAGUE"
-            subTitle="VALUATION INTELLIGENCE"
-            description="Machine-learning player market valuation built from historical market values, performance statistics, transfer movements, and temporal features using strict anti-leakage governance."
-          />
-
-          <div className="pt-2 flex flex-wrap gap-4 text-xs font-mono text-gray-300">
-            <button
-              onClick={() => navigate('/players')}
-              className="px-6 py-3 rounded-xl bg-signal-cyan/20 border border-signal-cyan/40 text-signal-cyan font-bold hover:bg-signal-cyan/30 transition flex items-center space-x-2"
-            >
-              <span>EXPLORE PLAYERS</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => navigate('/model-analytics')}
-              className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition"
-            >
-              <span>MODEL METRICS</span>
-            </button>
-          </div>
+          {/* Right Column: Open Space allowing the stadium footballer to show through unobstructed */}
+          <div className="lg:col-span-5 hidden lg:block" />
         </div>
       </div>
 
       {/* Real Aggregate Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <RevealOnScroll delay={0.05}>
-          <div className="glass-panel p-6 rounded-2xl border border-white/10 space-y-2">
+          <div className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 space-y-2">
             <div className="flex items-center justify-between text-gray-400 text-xs font-mono">
               <span>PLAYERS TRACKED</span>
               <Users className="w-4 h-4 text-signal-cyan" />
@@ -126,7 +133,7 @@ export const DashboardPage: React.FC = () => {
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.1}>
-          <div className="glass-panel p-6 rounded-2xl border border-white/10 space-y-2">
+          <div className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 space-y-2">
             <div className="flex items-center justify-between text-gray-400 text-xs font-mono">
               <span>HISTORICAL VALUATIONS</span>
               <DollarSign className="w-4 h-4 text-signal-emerald" />
@@ -139,7 +146,7 @@ export const DashboardPage: React.FC = () => {
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.15}>
-          <div className="glass-panel p-6 rounded-2xl border border-white/10 space-y-2">
+          <div className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 space-y-2">
             <div className="flex items-center justify-between text-gray-400 text-xs font-mono">
               <span>TEST WAPE SCORE</span>
               <Activity className="w-4 h-4 text-signal-cyan" />
@@ -152,7 +159,7 @@ export const DashboardPage: React.FC = () => {
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.2}>
-          <div className="glass-panel p-6 rounded-2xl border border-white/10 space-y-2">
+          <div className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 space-y-2">
             <div className="flex items-center justify-between text-gray-400 text-xs font-mono">
               <span>MODEL $R^2$ VARIANCE</span>
               <Cpu className="w-4 h-4 text-signal-cyan" />
@@ -169,7 +176,7 @@ export const DashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Undervalued */}
         <RevealOnScroll delay={0.25}>
-          <div className="glass-panel p-6 rounded-3xl border border-signal-emerald/20 space-y-4">
+          <div className="p-6 rounded-3xl bg-[#080c12]/85 backdrop-blur-md border border-signal-emerald/20 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <TrendingUp className="w-5 h-5 text-signal-emerald" />
@@ -214,7 +221,7 @@ export const DashboardPage: React.FC = () => {
 
         {/* Top Overvalued */}
         <RevealOnScroll delay={0.3}>
-          <div className="glass-panel p-6 rounded-3xl border border-signal-crimson/20 space-y-4">
+          <div className="p-6 rounded-3xl bg-[#080c12]/85 backdrop-blur-md border border-signal-crimson/20 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <TrendingDown className="w-5 h-5 text-signal-crimson" />
