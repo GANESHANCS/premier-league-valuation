@@ -1,0 +1,255 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Filter, Grid, List, ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { fetchPlayers } from '../api/client';
+import { PlayerSummary, PaginationMeta } from '../types/api';
+
+export const PlayerDiscoveryPage: React.FC = () => {
+  const [players, setPlayers] = useState<PlayerSummary[]>([]);
+  const [meta, setMeta] = useState<PaginationMeta | null>(null);
+  const [search, setSearch] = useState('');
+  const [position, setPosition] = useState<string>('');
+  const [signalFilter, setSignalFilter] = useState<string>('ALL');
+  const [page, setPage] = useState(1);
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setLoading(true);
+    fetchPlayers({
+      search: search.trim() || undefined,
+      position: position || undefined,
+      page,
+      page_size: 24,
+    })
+      .then((data) => {
+        let items = data.items;
+        if (signalFilter === 'UNDERVALUED') {
+          items = items.filter((p) => (p.valuation_gap_eur || 0) > 0);
+        } else if (signalFilter === 'OVERVALUED') {
+          items = items.filter((p) => (p.valuation_gap_eur || 0) < 0);
+        }
+        setPlayers(items);
+        setMeta(data.meta);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [search, position, signalFilter, page]);
+
+  const formatEuro = (val: number | null) => {
+    if (!val) return 'N/A';
+    if (val >= 1000000) return `€${(val / 1000000).toFixed(1)}M`;
+    if (val >= 1000) return `€${(val / 1000).toFixed(0)}K`;
+    return `€${val}`;
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header & Controls */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight font-sans">PLAYER DISCOVERY</h1>
+          <p className="text-xs text-gray-400 font-mono">
+            {meta ? `${meta.total.toLocaleString()} players tracked across dataset` : 'Searching database...'}
+          </p>
+        </div>
+
+        {/* View Toggle */}
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setViewMode('grid')}
+            className={`p-2 rounded-lg border transition ${
+              viewMode === 'grid'
+                ? 'bg-signal-cyan/20 border-signal-cyan/40 text-signal-cyan'
+                : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+            }`}
+          >
+            <Grid className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setViewMode('table')}
+            className={`p-2 rounded-lg border transition ${
+              viewMode === 'table'
+                ? 'bg-signal-cyan/20 border-signal-cyan/40 text-signal-cyan'
+                : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+            }`}
+          >
+            <List className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="glass-panel p-4 rounded-2xl border border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {/* Search */}
+        <div className="relative">
+          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
+          <input
+            type="text"
+            placeholder="Search player name or club..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            className="w-full bg-background-dark/80 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-signal-cyan"
+          />
+        </div>
+
+        {/* Position Select */}
+        <select
+          value={position}
+          onChange={(e) => {
+            setPosition(e.target.value);
+            setPage(1);
+          }}
+          className="bg-background-dark/80 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-signal-cyan"
+        >
+          <option value="">All Positions</option>
+          <option value="Attack">Attack</option>
+          <option value="Midfield">Midfield</option>
+          <option value="Defender">Defender</option>
+          <option value="Goalkeeper">Goalkeeper</option>
+        </select>
+
+        {/* Signal Select */}
+        <select
+          value={signalFilter}
+          onChange={(e) => setSignalFilter(e.target.value)}
+          className="bg-background-dark/80 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-signal-cyan"
+        >
+          <option value="ALL">All Valuation Signals</option>
+          <option value="UNDERVALUED">Model Undervalued</option>
+          <option value="OVERVALUED">Model Overvalued</option>
+        </select>
+      </div>
+
+      {/* Content Rendering */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="h-44 bg-white/5 rounded-2xl animate-pulse" />
+          ))}
+        </div>
+      ) : players.length === 0 ? (
+        <div className="glass-panel p-12 rounded-2xl text-center space-y-3">
+          <Filter className="w-8 h-8 text-gray-500 mx-auto" />
+          <h3 className="text-lg font-bold text-white font-mono">NO PLAYERS MATCH YOUR FILTERS</h3>
+          <p className="text-xs text-gray-400">Try adjusting your search criteria or clearing position filters.</p>
+        </div>
+      ) : viewMode === 'grid' ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {players.map((p) => {
+            const gap = p.valuation_gap_eur || 0;
+            const isUndervalued = gap > 0;
+            const isOvervalued = gap < 0;
+
+            return (
+              <div
+                key={p.player_id}
+                onClick={() => navigate(`/players/${p.player_id}`)}
+                className="glass-panel glass-panel-hover p-5 rounded-2xl cursor-pointer space-y-3 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-bold text-white text-base hover:text-signal-cyan transition">{p.name}</h3>
+                      <p className="text-xs text-gray-400 font-mono">{p.position || 'Unknown'} • {p.current_club_name || 'Free Agent'}</p>
+                    </div>
+                    {isUndervalued ? (
+                      <span className="p-1 rounded bg-signal-emerald/10 text-signal-emerald border border-signal-emerald/30">
+                        <TrendingUp className="w-3.5 h-3.5" />
+                      </span>
+                    ) : isOvervalued ? (
+                      <span className="p-1 rounded bg-signal-crimson/10 text-signal-crimson border border-signal-crimson/30">
+                        <TrendingDown className="w-3.5 h-3.5" />
+                      </span>
+                    ) : (
+                      <span className="p-1 rounded bg-gray-800 text-gray-400">
+                        <Minus className="w-3.5 h-3.5" />
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-white/5 space-y-1 font-mono text-xs">
+                  <div className="flex justify-between text-gray-400">
+                    <span>Observed Value</span>
+                    <span>{formatEuro(p.latest_observed_market_value_eur)}</span>
+                  </div>
+                  <div className="flex justify-between font-bold">
+                    <span className="text-gray-300">Predicted Fair Value</span>
+                    <span className={isUndervalued ? 'text-signal-emerald' : isOvervalued ? 'text-signal-crimson' : 'text-signal-cyan'}>
+                      {formatEuro(p.predicted_fair_value_eur)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        /* Table View */
+        <div className="glass-panel rounded-2xl overflow-x-auto border border-white/10">
+          <table className="w-full text-left text-xs font-mono">
+            <thead className="bg-white/5 text-gray-400 border-b border-white/10 uppercase">
+              <tr>
+                <th className="p-4">Player</th>
+                <th className="p-4">Position</th>
+                <th className="p-4">Club</th>
+                <th className="p-4 text-right">Observed Value</th>
+                <th className="p-4 text-right">Predicted Fair Value</th>
+                <th className="p-4 text-right">Valuation Gap</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {players.map((p) => {
+                const gap = p.valuation_gap_eur || 0;
+                return (
+                  <tr
+                    key={p.player_id}
+                    onClick={() => navigate(`/players/${p.player_id}`)}
+                    className="hover:bg-white/5 cursor-pointer transition"
+                  >
+                    <td className="p-4 font-bold text-white">{p.name}</td>
+                    <td className="p-4 text-gray-300">{p.position}</td>
+                    <td className="p-4 text-gray-400">{p.current_club_name || 'Free Agent'}</td>
+                    <td className="p-4 text-right text-gray-300">{formatEuro(p.latest_observed_market_value_eur)}</td>
+                    <td className="p-4 text-right font-bold text-signal-cyan">{formatEuro(p.predicted_fair_value_eur)}</td>
+                    <td className={`p-4 text-right font-bold ${gap > 0 ? 'text-signal-emerald' : gap < 0 ? 'text-signal-crimson' : 'text-gray-400'}`}>
+                      {formatEuro(gap)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Pagination Bar */}
+      {meta && meta.total_pages > 1 && (
+        <div className="flex items-center justify-between pt-4 border-t border-white/10 text-xs font-mono text-gray-400">
+          <span>Page {meta.page} of {meta.total_pages}</span>
+          <div className="flex space-x-2">
+            <button
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+              className="p-2 rounded-lg bg-white/5 border border-white/10 disabled:opacity-30 hover:bg-white/10"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              disabled={page >= meta.total_pages}
+              onClick={() => setPage(page + 1)}
+              className="p-2 rounded-lg bg-white/5 border border-white/10 disabled:opacity-30 hover:bg-white/10"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

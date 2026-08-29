@@ -16,6 +16,43 @@ def test_health_endpoint():
     assert "xgboost-v1" in data["model_version"]
     print(f"\n[TEST PASS] GET /api/health - {duration_ms:.2f} ms")
 
+def test_dashboard_summary_endpoint():
+    start = time.time()
+    response = client.get("/api/dashboard/summary")
+    duration_ms = (time.time() - start) * 1000
+
+    assert response.status_code == 200
+    data = response.json()
+    assert "total_players" in data
+    assert "top_undervalued" in data
+    assert "top_overvalued" in data
+    assert data["total_players"] > 0
+    print(f"[TEST PASS] GET /api/dashboard/summary - {duration_ms:.2f} ms ({data['total_players']} players tracked)")
+
+def test_global_transfers_endpoint():
+    start = time.time()
+    response = client.get("/api/transfers?page=1&page_size=10")
+    duration_ms = (time.time() - start) * 1000
+
+    assert response.status_code == 200
+    data = response.json()
+    assert "items" in data
+    assert "meta" in data
+    assert len(data["items"]) <= 10
+    print(f"[TEST PASS] GET /api/transfers - {duration_ms:.2f} ms")
+
+def test_model_analytics_endpoint():
+    start = time.time()
+    response = client.get("/api/model/analytics")
+    duration_ms = (time.time() - start) * 1000
+
+    assert response.status_code == 200
+    data = response.json()
+    assert "out_of_time_test_metrics" in data
+    assert "feature_importances" in data
+    assert data["out_of_time_test_metrics"]["WAPE"] <= 0.15
+    print(f"[TEST PASS] GET /api/model/analytics - {duration_ms:.2f} ms (WAPE: {data['out_of_time_test_metrics']['WAPE']*100:.2f}%)")
+
 def test_list_players_endpoint():
     start = time.time()
     response = client.get("/api/players?page=1&page_size=10")

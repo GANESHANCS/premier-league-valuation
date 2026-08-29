@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
-from backend.app.api import health, compare, players, valuations, transfers
+from backend.app.api import health, compare, players, valuations, transfers, dashboard, transfers_global, model_analytics
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -21,8 +21,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include API Routers (Mount compare before {player_id} path parameters)
+# Include API Routers
 app.include_router(health.router, prefix=settings.API_PREFIX)
+app.include_router(dashboard.router, prefix=f"{settings.API_PREFIX}/dashboard")
+app.include_router(transfers_global.router, prefix=f"{settings.API_PREFIX}/transfers")
+app.include_router(model_analytics.router, prefix=f"{settings.API_PREFIX}/model/analytics")
 app.include_router(compare.router, prefix=f"{settings.API_PREFIX}/players")
 app.include_router(players.router, prefix=f"{settings.API_PREFIX}/players")
 app.include_router(valuations.router, prefix=f"{settings.API_PREFIX}/players")
