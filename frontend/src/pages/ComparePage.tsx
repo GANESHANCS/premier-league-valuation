@@ -4,7 +4,7 @@ import { fetchPlayers, fetchPlayerComparison } from '../api/client';
 import { ComparisonPlayer, PlayerSummary } from '../types/api';
 
 export const ComparePage: React.FC = () => {
-  const [selectedIds, setSelectedIds] = useState<number[]>([10, 11]); // Default to first 2 players
+  const [selectedIds, setSelectedIds] = useState<number[]>([418560, 433177]); // Default to Erling Haaland & Bukayo Saka
   const [comparedPlayers, setComparedPlayers] = useState<ComparisonPlayer[]>([]);
   const [searchResults, setSearchResults] = useState<PlayerSummary[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,7 +26,7 @@ export const ComparePage: React.FC = () => {
 
   useEffect(() => {
     if (searchTerm.trim().length > 1) {
-      fetchPlayers({ search: searchTerm.trim(), page_size: 5 })
+      fetchPlayers({ search: searchTerm.trim(), league: 'GB1', page_size: 5 })
         .then((res) => setSearchResults(res.items))
         .catch(() => setSearchResults([]));
     } else {

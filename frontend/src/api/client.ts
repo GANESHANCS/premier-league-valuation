@@ -40,6 +40,7 @@ export const fetchPlayers = async (params: {
   search?: string;
   position?: string;
   club_id?: number;
+  league?: string;
   page?: number;
   page_size?: number;
 }): Promise<PaginatedPlayersResponse> => {
@@ -60,6 +61,7 @@ export const fetchPlayerValuation = async (playerId: number): Promise<Prediction
 export const fetchGlobalTransfers = async (params: {
   search?: string;
   status?: string;
+  scope?: string;
   page?: number;
   page_size?: number;
 }): Promise<{ items: Transfer[]; meta: any }> => {

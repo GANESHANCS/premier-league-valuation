@@ -1,8 +1,8 @@
 const CACHE_NAME = 'pl-valuedge-v1';
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest'
+  './',
+  './index.html',
+  './manifest.webmanifest'
 ];
 
 self.addEventListener('install', (event) => {
@@ -28,8 +28,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Network-only policy for live backend API calls - NEVER serve stale valuation data from cache
-  if (url.pathname.startsWith('/api') || url.pathname.includes('/api/')) {
+  // Network-only policy for live backend API calls & external endpoints - NEVER serve stale valuation data from cache
+  if (url.pathname.startsWith('/api') || url.pathname.includes('/api/') || url.origin !== self.location.origin) {
     event.respondWith(fetch(event.request));
     return;
   }
@@ -38,7 +38,7 @@ self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request).catch(() => {
-        return caches.match('/index.html');
+        return caches.match('./index.html') || caches.match('/index.html');
       })
     );
     return;

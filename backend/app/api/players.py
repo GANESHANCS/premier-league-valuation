@@ -12,16 +12,18 @@ def list_players(
     search: Optional[str] = Query(None, description="Search player by name"),
     position: Optional[str] = Query(None, description="Filter by main position (e.g. Defender, Forward)"),
     club_id: Optional[int] = Query(None, description="Filter by club ID"),
+    league: Optional[str] = Query("GB1", description="Domain scope: 'GB1' for Premier League (default), or 'all' for global players"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
     db: Session = Depends(get_db)
 ):
-    """Lists and searches Premier League players with pagination and filters."""
+    """Lists and searches Premier League players with pagination and domain filters."""
     result = PlayerService.get_players(
         db=db,
         search=search,
         position=position,
         club_id=club_id,
+        league=league,
         page=page,
         page_size=page_size
     )

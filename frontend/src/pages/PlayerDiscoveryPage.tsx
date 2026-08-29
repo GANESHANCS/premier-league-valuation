@@ -10,6 +10,7 @@ export const PlayerDiscoveryPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [position, setPosition] = useState<string>('');
   const [signalFilter, setSignalFilter] = useState<string>('ALL');
+  const [leagueScope, setLeagueScope] = useState<string>('GB1');
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [loading, setLoading] = useState(true);
@@ -20,6 +21,7 @@ export const PlayerDiscoveryPage: React.FC = () => {
     fetchPlayers({
       search: search.trim() || undefined,
       position: position || undefined,
+      league: leagueScope,
       page,
       page_size: 24,
     })
@@ -35,7 +37,7 @@ export const PlayerDiscoveryPage: React.FC = () => {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [search, position, signalFilter, page]);
+  }, [search, position, leagueScope, signalFilter, page]);
 
   const formatEuro = (val: number | null) => {
     if (!val) return 'N/A';
@@ -49,9 +51,14 @@ export const PlayerDiscoveryPage: React.FC = () => {
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight font-sans">PLAYER DISCOVERY</h1>
-          <p className="text-xs text-gray-400 font-mono">
-            {meta ? `${meta.total.toLocaleString()} players tracked across dataset` : 'Searching database...'}
+          <div className="flex items-center space-x-2">
+            <h1 className="text-2xl font-bold text-white tracking-tight font-sans">PLAYER DISCOVERY</h1>
+            <span className="text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-signal-cyan/15 text-signal-cyan border border-signal-cyan/30">
+              {leagueScope === 'GB1' ? 'PREMIER LEAGUE DOMAIN' : 'GLOBAL SCOPE'}
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 font-mono mt-1">
+            {meta ? `${meta.total.toLocaleString()} players tracked (${leagueScope === 'GB1' ? 'Premier League clubs' : 'All global leagues'})` : 'Searching database...'}
           </p>
         </div>
 
@@ -85,7 +92,21 @@ export const PlayerDiscoveryPage: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="glass-panel p-4 rounded-2xl border border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="glass-panel p-4 rounded-2xl border border-white/10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* Domain Scope Select */}
+        <select
+          value={leagueScope}
+          aria-label="Filter player domain scope"
+          onChange={(e) => {
+            setLeagueScope(e.target.value);
+            setPage(1);
+          }}
+          className="bg-background-dark/80 border border-signal-cyan/40 rounded-xl px-4 py-2 text-sm text-signal-cyan font-mono font-bold focus:outline-none focus:border-signal-cyan"
+        >
+          <option value="GB1">Premier League Universe (Default)</option>
+          <option value="all">Global Players Scope</option>
+        </select>
+
         {/* Search */}
         <div className="relative">
           <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />

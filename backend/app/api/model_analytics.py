@@ -25,19 +25,21 @@ def get_model_analytics() -> Dict[str, Any]:
         "model_name": summary_data.get("best_model_name", "XGBoost"),
         "model_version": settings.MODEL_VERSION,
         "out_of_time_test_metrics": summary_data.get("test_results", {
-            "MAE_EUR": 1689451.0,
-            "MedAE_EUR": 357173.0,
-            "RMSE_EUR": 4642892.0,
-            "R2": 0.9542,
-            "WAPE": 0.1486,
-            "Log_RMSE": 0.3917
+            "MAE_EUR": 2255249.92,
+            "MedAE_EUR": 877417.5,
+            "RMSE_EUR": 4950696.25,
+            "R2": 0.9457,
+            "WAPE": 0.1289,
+            "Log_MAE": 0.2090,
+            "Log_RMSE": 0.3457
         }),
         "validation_metrics": summary_data.get("validation_results", {}).get("XGBoost", {
-            "MAE_EUR": 1376134.0,
-            "MedAE_EUR": 310113.0,
-            "RMSE_EUR": 3210601.0,
+            "MAE_EUR": 1376134.27,
+            "MedAE_EUR": 310112.75,
+            "RMSE_EUR": 3210600.95,
             "R2": 0.9577,
             "WAPE": 0.1520,
+            "Log_MAE": 0.2564,
             "Log_RMSE": 0.3983
         }),
         "feature_importances": explain_data.get("top_features", []),

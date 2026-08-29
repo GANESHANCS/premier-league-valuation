@@ -34,7 +34,7 @@ def test_dashboard_summary_endpoint():
 
 def test_global_transfers_endpoint():
     start = time.time()
-    response = client.get("/api/transfers?page=1&page_size=10")
+    response = client.get("/api/transfers?scope=historical&page=1&page_size=10")
     duration_ms = (time.time() - start) * 1000
 
     assert response.status_code == 200
@@ -42,7 +42,16 @@ def test_global_transfers_endpoint():
     assert "items" in data
     assert "meta" in data
     assert len(data["items"]) <= 10
-    print(f"[TEST PASS] GET /api/transfers - {duration_ms:.2f} ms")
+    if len(data["items"]) > 0:
+        assert data["items"][0]["transfer_date"] <= "2026-08-29"
+
+    fut_res = client.get("/api/transfers?scope=future&page=1&page_size=5")
+    assert fut_res.status_code == 200
+    fut_items = fut_res.json()["items"]
+    if len(fut_items) > 0:
+        assert fut_items[0]["transfer_date"] > "2026-08-29"
+
+    print(f"[TEST PASS] GET /api/transfers (Historical & Future Scopes) - {duration_ms:.2f} ms")
 
 def test_model_analytics_endpoint():
     start = time.time()
@@ -53,12 +62,15 @@ def test_model_analytics_endpoint():
     data = response.json()
     assert "out_of_time_test_metrics" in data
     assert "feature_importances" in data
-    assert data["out_of_time_test_metrics"]["WAPE"] <= 0.15
-    print(f"[TEST PASS] GET /api/model/analytics - {duration_ms:.2f} ms (WAPE: {data['out_of_time_test_metrics']['WAPE']*100:.2f}%)")
+    test_metrics = data["out_of_time_test_metrics"]
+    assert round(test_metrics["WAPE"], 4) == 0.1289
+    assert round(test_metrics["R2"], 4) == 0.9457
+    assert round(test_metrics["MAE_EUR"], 2) == 2255249.92
+    print(f"[TEST PASS] GET /api/model/analytics - {duration_ms:.2f} ms (Authoritative Test WAPE: {test_metrics['WAPE']*100:.2f}%, R2: {test_metrics['R2']:.4f})")
 
 def test_list_players_endpoint():
     start = time.time()
-    response = client.get("/api/players?page=1&page_size=10")
+    response = client.get("/api/players?league=GB1&page=1&page_size=10")
     duration_ms = (time.time() - start) * 1000
 
     assert response.status_code == 200
@@ -66,8 +78,13 @@ def test_list_players_endpoint():
     assert "items" in data
     assert "meta" in data
     assert len(data["items"]) <= 10
-    assert data["meta"]["page"] == 1
-    print(f"[TEST PASS] GET /api/players (Pagination) - {duration_ms:.2f} ms ({data['meta']['total']} total players)")
+    assert data["meta"]["total"] == 2259
+
+    global_res = client.get("/api/players?league=all&page=1&page_size=10")
+    assert global_res.status_code == 200
+    assert global_res.json()["meta"]["total"] == 50149
+
+    print(f"[TEST PASS] GET /api/players (PL Domain: 2,259 players | Global Domain: 50,149 players) - {duration_ms:.2f} ms")
 
 def test_player_search_endpoint():
     start = time.time()

@@ -8,20 +8,24 @@ import { ComparePage } from './pages/ComparePage';
 import { TransferIntelligencePage } from './pages/TransferIntelligencePage';
 import { ModelAnalyticsPage } from './pages/ModelAnalyticsPage';
 
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+
 export const App: React.FC = () => {
   return (
-    <Router basename={import.meta.env.BASE_URL}>
-      <AppShell>
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/players" element={<PlayerDiscoveryPage />} />
-          <Route path="/players/:id" element={<PlayerProfilePage />} />
-          <Route path="/compare" element={<ComparePage />} />
-          <Route path="/transfers" element={<TransferIntelligencePage />} />
-          <Route path="/model-analytics" element={<ModelAnalyticsPage />} />
-        </Routes>
-      </AppShell>
-    </Router>
+    <ErrorBoundary>
+      <Router basename={import.meta.env.BASE_URL}>
+        <AppShell>
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/players" element={<PlayerDiscoveryPage />} />
+            <Route path="/players/:id" element={<PlayerProfilePage />} />
+            <Route path="/compare" element={<ComparePage />} />
+            <Route path="/transfers" element={<TransferIntelligencePage />} />
+            <Route path="/model-analytics" element={<ModelAnalyticsPage />} />
+          </Routes>
+        </AppShell>
+      </Router>
+    </ErrorBoundary>
   );
 };
 export default App;

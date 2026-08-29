@@ -60,7 +60,7 @@ export const Sidebar: React.FC = () => {
         </div>
         <div className="flex items-center justify-between">
           <span>TEST WAPE</span>
-          <span className="text-signal-emerald">14.86%</span>
+          <span className="text-signal-emerald">12.89%</span>
         </div>
       </div>
     </aside>

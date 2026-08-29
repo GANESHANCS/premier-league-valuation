@@ -8,6 +8,7 @@ export const TransferIntelligencePage: React.FC = () => {
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [scope, setScope] = useState('historical');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
@@ -16,6 +17,7 @@ export const TransferIntelligencePage: React.FC = () => {
     fetchGlobalTransfers({
       search: search.trim() || undefined,
       status: statusFilter || undefined,
+      scope: scope || undefined,
       page,
       page_size: 25,
     })
@@ -25,7 +27,7 @@ export const TransferIntelligencePage: React.FC = () => {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [search, statusFilter, page]);
+  }, [search, statusFilter, scope, page]);
 
   const formatEuro = (val: number | null) => {
     if (!val && val !== 0) return 'N/A';
@@ -38,18 +40,39 @@ export const TransferIntelligencePage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight font-sans flex items-center space-x-2">
-            <ArrowLeftRight className="w-6 h-6 text-signal-cyan" />
-            <span>GLOBAL TRANSFER INTELLIGENCE</span>
-          </h1>
-          <p className="text-xs text-gray-400 font-mono">
-            {meta ? `${meta.total.toLocaleString()} historical transfer records audited` : 'Loading transfer feed...'}
+          <div className="flex items-center space-x-2">
+            <h1 className="text-2xl font-bold text-white tracking-tight font-sans flex items-center space-x-2">
+              <ArrowLeftRight className="w-6 h-6 text-signal-cyan" />
+              <span>GLOBAL TRANSFER INTELLIGENCE</span>
+            </h1>
+            <span className="text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-signal-cyan/15 text-signal-cyan border border-signal-cyan/30">
+              GLOBAL DATASET (175,165 RECORDS)
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 font-mono mt-1">
+            {meta ? `${meta.total.toLocaleString()} transfer events audited (${scope === 'historical' ? 'Completed Historical <= Aug 2026' : scope === 'future' ? 'Future Scheduled / Loan End Agreements' : 'All Global Timeline'})` : 'Loading transfer feed...'}
           </p>
         </div>
       </div>
 
       {/* Filter Controls */}
-      <div className="glass-panel p-4 rounded-2xl border border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="glass-panel p-4 rounded-2xl border border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {/* Timeline Scope */}
+        <select
+          value={scope}
+          aria-label="Filter transfer timeline scope"
+          onChange={(e) => {
+            setScope(e.target.value);
+            setPage(1);
+          }}
+          className="bg-background-dark/80 border border-signal-cyan/40 rounded-xl px-4 py-2 text-sm text-signal-cyan font-mono font-bold focus:outline-none focus:border-signal-cyan"
+        >
+          <option value="historical">Historical Transfers (Completed)</option>
+          <option value="future">Future / Scheduled Agreements</option>
+          <option value="all">All Timeline Scope</option>
+        </select>
+
+        {/* Search */}
         <div className="relative">
           <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
           <input
@@ -65,6 +88,7 @@ export const TransferIntelligencePage: React.FC = () => {
           />
         </div>
 
+        {/* Fee Status */}
         <select
           value={statusFilter}
           aria-label="Filter transfer records by fee classification"

@@ -41,11 +41,11 @@ export const Header: React.FC = () => {
       <div className="flex items-center space-x-6 text-xs font-mono">
         <div className="flex items-center space-x-2">
           <span className="w-2 h-2 rounded-full bg-signal-emerald animate-ping" />
-          <span className="text-gray-300 font-semibold">DATA STATUS</span>
-          <span className="text-gray-400 font-normal">● RETRIEVED 29 AUG 2026</span>
+          <span className="text-gray-300 font-semibold">DATA RETRIEVED</span>
+          <span className="text-gray-400 font-normal">29 AUG 2026</span>
         </div>
         <div className="hidden sm:flex items-center space-x-2 text-gray-400">
-          <span>FRESHNESS:</span>
+          <span>LATEST OBSERVED VALUATION:</span>
           <span className="text-signal-cyan">12 JUN 2026</span>
         </div>
       </div>

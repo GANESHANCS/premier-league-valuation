@@ -37,6 +37,7 @@ class PlayerService:
         search: Optional[str] = None,
         position: Optional[str] = None,
         club_id: Optional[int] = None,
+        league: Optional[str] = "GB1",
         sort_by: str = "market_value",
         order: str = "desc",
         page: int = 1,
@@ -44,7 +45,11 @@ class PlayerService:
     ) -> Dict[str, Any]:
         query = db.query(Player)
 
-        # Filters
+        # Domain Scope Filter (GB1 = Premier League)
+        if league and league.strip().upper() == "GB1":
+            query = query.join(Club, Player.current_club_id == Club.club_id).filter(Club.domestic_competition_id == 'GB1')
+
+        # Search & Entity Filters
         if search:
             search_pattern = f"%{search.strip()}%"
             query = query.filter(Player.name.ilike(search_pattern))
@@ -54,6 +59,25 @@ class PlayerService:
 
         if club_id:
             query = query.filter(Player.current_club_id == club_id)
+
+        # Market Value Sorting Optimization
+        if sort_by == "market_value":
+            sub_val = db.query(
+                PlayerMarketValue.player_id,
+                func.max(PlayerMarketValue.valuation_date).label('max_date')
+            ).group_by(PlayerMarketValue.player_id).subquery()
+
+            latest_mv = db.query(
+                PlayerMarketValue.player_id,
+                PlayerMarketValue.market_value_eur
+            ).join(
+                sub_val, (PlayerMarketValue.player_id == sub_val.c.player_id) & (PlayerMarketValue.valuation_date == sub_val.c.max_date)
+            ).subquery()
+
+            if order == "asc":
+                query = query.outerjoin(latest_mv, Player.player_id == latest_mv.c.player_id).order_by(asc(latest_mv.c.market_value_eur))
+            else:
+                query = query.outerjoin(latest_mv, Player.player_id == latest_mv.c.player_id).order_by(desc(latest_mv.c.market_value_eur))
 
         # Total count
         total = query.count()
