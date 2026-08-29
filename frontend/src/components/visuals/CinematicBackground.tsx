@@ -56,6 +56,8 @@ export const CinematicBackground: React.FC = () => {
     : location.pathname;
 
   const currentVisual = ROUTE_VISUALS[routePath] || ROUTE_VISUALS['/'];
+  const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const fullVideoSrc = `${baseUrl}${currentVisual.videoSrc}`;
 
   useEffect(() => {
     setVideoLoaded(false);
@@ -64,7 +66,7 @@ export const CinematicBackground: React.FC = () => {
       videoRef.current.load();
       videoRef.current.play().catch(() => setVideoError(true));
     }
-  }, [currentVisual.videoSrc, prefersReducedMotion]);
+  }, [fullVideoSrc, prefersReducedMotion]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">
@@ -83,7 +85,7 @@ export const CinematicBackground: React.FC = () => {
             videoLoaded ? 'opacity-30 scale-105' : 'opacity-0'
           }`}
         >
-          <source src={currentVisual.videoSrc} type="video/mp4" />
+          <source src={fullVideoSrc} type="video/mp4" />
         </video>
       )}
 
