@@ -9,7 +9,19 @@ import {
   ComparisonPlayer
 } from '../types/api';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const getApiBaseUrl = (): string => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (!envUrl || envUrl.trim() === '') {
+    return '/api';
+  }
+  const cleanUrl = envUrl.trim().replace(/\/+$/, '');
+  if (!cleanUrl.endsWith('/api')) {
+    return `${cleanUrl}/api`;
+  }
+  return cleanUrl;
+};
+
+export const API_BASE_URL = getApiBaseUrl();
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -17,6 +29,7 @@ export const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
 
 export const fetchDashboardSummary = async (): Promise<DashboardSummary> => {
   const response = await apiClient.get<DashboardSummary>('/dashboard/summary');
