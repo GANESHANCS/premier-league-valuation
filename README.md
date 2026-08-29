@@ -3,7 +3,8 @@
 > **Temporal Machine Learning Market Valuation System**  
 > *Independent Portfolio Analytics Platform for Football Market Intelligence*
 
-[![Phase 7 Deployment Ready](https://img.shields.io/badge/Phase_7-Deployment_Ready-10b981?style=for-the-badge)](docs/PHASE_7_DEPLOYMENT_READINESS_REPORT.md)
+[![Phase 8 Deployment Validated](https://img.shields.io/badge/Phase_8-Live_Deployment_Prepared-10b981?style=for-the-badge)](docs/PHASE_8_LIVE_DEPLOYMENT_REPORT.md)
+[![Deployment Runbook](https://img.shields.io/badge/Deployment-Runbook_Available-06b6d4?style=for-the-badge)](docs/PHASE_8_DEPLOYMENT_RUNBOOK.md)
 [![Model Version](https://img.shields.io/badge/Model-XGBoost--v1-06b6d4?style=for-the-badge)](data/processed/ml/best_model.joblib)
 [![Out--of--Time R²](https://img.shields.io/badge/Out--of--Time_R²-0.9542-10b981?style=for-the-badge)](#machine-learning--evaluation)
 [![Out--of--Time WAPE](https://img.shields.io/badge/Out--of--Time_WAPE-14.86%25-06b6d4?style=for-the-badge)](#machine-learning--evaluation)
