@@ -56,9 +56,11 @@ export const PlayerDiscoveryPage: React.FC = () => {
         </div>
 
         {/* View Toggle */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2" role="group" aria-label="Layout view mode">
           <button
             onClick={() => setViewMode('grid')}
+            aria-label="Switch to grid layout view"
+            aria-pressed={viewMode === 'grid'}
             className={`p-2 rounded-lg border transition ${
               viewMode === 'grid'
                 ? 'bg-signal-cyan/20 border-signal-cyan/40 text-signal-cyan'
@@ -69,6 +71,8 @@ export const PlayerDiscoveryPage: React.FC = () => {
           </button>
           <button
             onClick={() => setViewMode('table')}
+            aria-label="Switch to table layout view"
+            aria-pressed={viewMode === 'table'}
             className={`p-2 rounded-lg border transition ${
               viewMode === 'table'
                 ? 'bg-signal-cyan/20 border-signal-cyan/40 text-signal-cyan'
@@ -87,6 +91,7 @@ export const PlayerDiscoveryPage: React.FC = () => {
           <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
           <input
             type="text"
+            aria-label="Search player name or club"
             placeholder="Search player name or club..."
             value={search}
             onChange={(e) => {
@@ -100,6 +105,7 @@ export const PlayerDiscoveryPage: React.FC = () => {
         {/* Position Select */}
         <select
           value={position}
+          aria-label="Filter players by position"
           onChange={(e) => {
             setPosition(e.target.value);
             setPage(1);
@@ -116,6 +122,7 @@ export const PlayerDiscoveryPage: React.FC = () => {
         {/* Signal Select */}
         <select
           value={signalFilter}
+          aria-label="Filter players by model valuation signal"
           onChange={(e) => setSignalFilter(e.target.value)}
           className="bg-background-dark/80 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-signal-cyan"
         >
@@ -144,12 +151,19 @@ export const PlayerDiscoveryPage: React.FC = () => {
             const gap = p.valuation_gap_eur || 0;
             const isUndervalued = gap > 0;
             const isOvervalued = gap < 0;
+            const signalText = isUndervalued ? 'UNDERVALUED' : isOvervalued ? 'OVERVALUED' : 'FAIR VALUE';
 
             return (
               <div
                 key={p.player_id}
+                role="button"
+                tabIndex={0}
+                aria-label={`View detail profile for ${p.name}, ${signalText}`}
                 onClick={() => navigate(`/players/${p.player_id}`)}
-                className="glass-panel glass-panel-hover p-5 rounded-2xl cursor-pointer space-y-3 flex flex-col justify-between"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') navigate(`/players/${p.player_id}`);
+                }}
+                className="glass-panel glass-panel-hover p-5 rounded-2xl cursor-pointer space-y-3 flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-signal-cyan/50"
               >
                 <div>
                   <div className="flex items-start justify-between">
@@ -158,16 +172,19 @@ export const PlayerDiscoveryPage: React.FC = () => {
                       <p className="text-xs text-gray-400 font-mono">{p.position || 'Unknown'} • {p.current_club_name || 'Free Agent'}</p>
                     </div>
                     {isUndervalued ? (
-                      <span className="p-1 rounded bg-signal-emerald/10 text-signal-emerald border border-signal-emerald/30">
-                        <TrendingUp className="w-3.5 h-3.5" />
+                      <span className="px-2 py-0.5 rounded bg-signal-emerald/10 text-signal-emerald border border-signal-emerald/30 text-[10px] font-mono font-bold flex items-center space-x-1">
+                        <TrendingUp className="w-3 h-3" />
+                        <span>UNDERVALUED</span>
                       </span>
                     ) : isOvervalued ? (
-                      <span className="p-1 rounded bg-signal-crimson/10 text-signal-crimson border border-signal-crimson/30">
-                        <TrendingDown className="w-3.5 h-3.5" />
+                      <span className="px-2 py-0.5 rounded bg-signal-crimson/10 text-signal-crimson border border-signal-crimson/30 text-[10px] font-mono font-bold flex items-center space-x-1">
+                        <TrendingDown className="w-3 h-3" />
+                        <span>OVERVALUED</span>
                       </span>
                     ) : (
-                      <span className="p-1 rounded bg-gray-800 text-gray-400">
-                        <Minus className="w-3.5 h-3.5" />
+                      <span className="px-2 py-0.5 rounded bg-gray-800 text-gray-400 text-[10px] font-mono flex items-center space-x-1">
+                        <Minus className="w-3 h-3" />
+                        <span>FAIR VALUE</span>
                       </span>
                     )}
                   </div>

@@ -54,6 +54,7 @@ export const TransferIntelligencePage: React.FC = () => {
           <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
           <input
             type="text"
+            aria-label="Search transfer records by player name or club"
             placeholder="Search player or club..."
             value={search}
             onChange={(e) => {
@@ -66,6 +67,7 @@ export const TransferIntelligencePage: React.FC = () => {
 
         <select
           value={statusFilter}
+          aria-label="Filter transfer records by fee classification"
           onChange={(e) => {
             setStatusFilter(e.target.value);
             setPage(1);
@@ -88,7 +90,7 @@ export const TransferIntelligencePage: React.FC = () => {
         </div>
       ) : (
         <div className="glass-panel rounded-2xl overflow-x-auto border border-white/10">
-          <table className="w-full text-left font-mono text-xs">
+          <table aria-label="Global historical transfer records table" className="w-full text-left font-mono text-xs">
             <thead className="bg-white/5 text-gray-400 border-b border-white/10 uppercase">
               <tr>
                 <th className="p-4">Date</th>
@@ -134,6 +136,7 @@ export const TransferIntelligencePage: React.FC = () => {
           <div className="flex space-x-2">
             <button
               disabled={page === 1}
+              aria-label="Navigate to previous page"
               onClick={() => setPage(page - 1)}
               className="p-2 rounded-lg bg-white/5 border border-white/10 disabled:opacity-30 hover:bg-white/10"
             >
@@ -141,6 +144,7 @@ export const TransferIntelligencePage: React.FC = () => {
             </button>
             <button
               disabled={page >= meta.total_pages}
+              aria-label="Navigate to next page"
               onClick={() => setPage(page + 1)}
               className="p-2 rounded-lg bg-white/5 border border-white/10 disabled:opacity-30 hover:bg-white/10"
             >

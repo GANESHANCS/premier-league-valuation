@@ -109,7 +109,7 @@ export const ModelAnalyticsPage: React.FC = () => {
       </div>
 
       {/* Feature Importance Bar Chart */}
-      <div className="glass-panel p-6 rounded-2xl border border-white/10 space-y-4">
+      <div aria-label="Top 10 permutation feature importances chart" className="glass-panel p-6 rounded-2xl border border-white/10 space-y-4">
         <h2 className="text-base font-bold text-white font-sans flex items-center space-x-2">
           <BarChart2 className="w-5 h-5 text-signal-cyan" />
           <span>Top Permutation Feature Importances (%)</span>

@@ -12,7 +12,7 @@ const NAV_ITEMS = [
 
 export const Sidebar: React.FC = () => {
   return (
-    <aside className="w-64 bg-background-dark/95 border-r border-white/10 flex flex-col justify-between hidden md:flex z-30 select-none backdrop-blur-xl">
+    <aside aria-label="Main navigation sidebar" className="w-64 bg-background-dark/95 border-r border-white/10 flex flex-col justify-between hidden md:flex z-30 select-none backdrop-blur-xl">
       <div>
         {/* Brand Header */}
         <div className="p-6 border-b border-white/5 flex items-center space-x-3">
@@ -28,13 +28,14 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* Navigation Items */}
-        <nav className="p-4 space-y-1">
+        <nav aria-label="Sidebar main navigation" className="p-4 space-y-1">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
+                aria-label={`Navigate to ${item.label}`}
                 className={({ isActive }) =>
                   `flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
                     isActive

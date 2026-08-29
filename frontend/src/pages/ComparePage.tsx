@@ -73,6 +73,7 @@ export const ComparePage: React.FC = () => {
           <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
           <input
             type="text"
+            aria-label="Search and add player to comparison matrix"
             placeholder="Add player to compare..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -84,7 +85,13 @@ export const ComparePage: React.FC = () => {
               {searchResults.map((p) => (
                 <div
                   key={p.player_id}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Add ${p.name} to comparison`}
                   onClick={() => addPlayer(p.player_id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') addPlayer(p.player_id);
+                  }}
                   className="p-2 hover:bg-white/10 rounded-lg cursor-pointer text-xs font-mono text-white flex justify-between"
                 >
                   <span>{p.name} ({p.current_club_name || 'Free Agent'})</span>
@@ -105,7 +112,7 @@ export const ComparePage: React.FC = () => {
         </div>
       ) : (
         <div className="glass-panel rounded-2xl overflow-x-auto border border-white/10">
-          <table className="w-full text-left font-mono text-xs">
+          <table aria-label="Player comparison matrix table" className="w-full text-left font-mono text-xs">
             <thead className="bg-white/5 border-b border-white/10">
               <tr>
                 <th className="p-4 text-gray-400 font-normal">Metric</th>
@@ -119,6 +126,7 @@ export const ComparePage: React.FC = () => {
                       {selectedIds.length > 2 && (
                         <button
                           onClick={() => removePlayer(p.player_id)}
+                          aria-label={`Remove ${p.name} from comparison matrix`}
                           className="p-1 text-gray-500 hover:text-signal-crimson transition"
                         >
                           <X className="w-4 h-4" />
@@ -158,9 +166,10 @@ export const ComparePage: React.FC = () => {
                 <td className="p-4 text-gray-400">Valuation Gap</td>
                 {comparedPlayers.map((p) => {
                   const gap = p.valuation_gap_eur || 0;
+                  const label = gap > 0 ? ' (Undervalued)' : gap < 0 ? ' (Overvalued)' : ' (Fair)';
                   return (
                     <td key={p.player_id} className={`p-4 font-bold ${gap > 0 ? 'text-signal-emerald' : gap < 0 ? 'text-signal-crimson' : 'text-gray-400'}`}>
-                      {formatEuro(gap)}
+                      {formatEuro(gap)}{label}
                     </td>
                   );
                 })}

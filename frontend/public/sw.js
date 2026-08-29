@@ -26,6 +26,15 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // Network-only policy for live backend API calls - NEVER serve stale valuation data from cache
+  if (url.pathname.startsWith('/api') || url.pathname.includes('/api/')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Navigation requests: fetch network first, fallback to offline application shell index.html
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request).catch(() => {
@@ -35,9 +44,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Cache-first strategy for static application assets (JS, CSS, images, fonts)
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       return cachedResponse || fetch(event.request);
     })
   );
 });
+

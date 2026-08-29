@@ -36,7 +36,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="h-16 bg-background-dark/80 border-b border-white/10 px-6 flex items-center justify-between sticky top-0 z-20 backdrop-blur-xl">
+    <header aria-label="Global application navigation header" className="h-16 bg-background-dark/80 border-b border-white/10 px-6 flex items-center justify-between sticky top-0 z-20 backdrop-blur-xl">
       {/* System Status Indicators */}
       <div className="flex items-center space-x-6 text-xs font-mono">
         <div className="flex items-center space-x-2">
@@ -55,6 +55,7 @@ export const Header: React.FC = () => {
         {deferredPrompt && (
           <button
             onClick={handleInstallClick}
+            aria-label="Install Premier League Valuation Intelligence PWA"
             className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-signal-cyan/10 border border-signal-cyan/30 text-signal-cyan hover:bg-signal-cyan/20 transition text-xs font-mono"
           >
             <Download className="w-3.5 h-3.5" />
@@ -64,6 +65,7 @@ export const Header: React.FC = () => {
 
         <button 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

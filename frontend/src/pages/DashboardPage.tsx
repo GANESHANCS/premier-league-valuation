@@ -133,9 +133,15 @@ export const DashboardPage: React.FC = () => {
             {summary.top_undervalued.map((p) => (
               <motion.div
                 key={p.player_id}
+                role="button"
+                tabIndex={0}
+                aria-label={`View valuation profile for ${p.name}, Undervalued by ${p.valuation_gap_pct.toFixed(1)} percent`}
                 onClick={() => navigate(`/players/${p.player_id}`)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') navigate(`/players/${p.player_id}`);
+                }}
                 whileHover={{ scale: 1.01 }}
-                className="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer flex items-center justify-between transition"
+                className="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-signal-emerald/50"
               >
                 <div>
                   <h3 className="font-semibold text-white text-sm">{p.name}</h3>
@@ -144,7 +150,10 @@ export const DashboardPage: React.FC = () => {
                 <div className="text-right font-mono">
                   <p className="text-xs text-gray-400">Observed: {formatEuro(p.observed_market_value_eur)}</p>
                   <p className="text-sm font-bold text-signal-emerald">Fair Value: {formatEuro(p.predicted_fair_value_eur)}</p>
-                  <p className="text-[11px] text-signal-emerald font-bold">+{p.valuation_gap_pct.toFixed(1)}%</p>
+                  <p className="text-[11px] text-signal-emerald font-bold flex items-center justify-end space-x-1">
+                    <TrendingUp className="w-3 h-3" />
+                    <span>+{p.valuation_gap_pct.toFixed(1)}% (UNDERVALUED)</span>
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -167,9 +176,15 @@ export const DashboardPage: React.FC = () => {
             {summary.top_overvalued.map((p) => (
               <motion.div
                 key={p.player_id}
+                role="button"
+                tabIndex={0}
+                aria-label={`View valuation profile for ${p.name}, Overvalued by ${p.valuation_gap_pct.toFixed(1)} percent`}
                 onClick={() => navigate(`/players/${p.player_id}`)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') navigate(`/players/${p.player_id}`);
+                }}
                 whileHover={{ scale: 1.01 }}
-                className="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer flex items-center justify-between transition"
+                className="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-signal-crimson/50"
               >
                 <div>
                   <h3 className="font-semibold text-white text-sm">{p.name}</h3>
@@ -178,7 +193,10 @@ export const DashboardPage: React.FC = () => {
                 <div className="text-right font-mono">
                   <p className="text-xs text-gray-400">Observed: {formatEuro(p.observed_market_value_eur)}</p>
                   <p className="text-sm font-bold text-signal-crimson">Fair Value: {formatEuro(p.predicted_fair_value_eur)}</p>
-                  <p className="text-[11px] text-signal-crimson font-bold">{p.valuation_gap_pct.toFixed(1)}%</p>
+                  <p className="text-[11px] text-signal-crimson font-bold flex items-center justify-end space-x-1">
+                    <TrendingDown className="w-3 h-3" />
+                    <span>{p.valuation_gap_pct.toFixed(1)}% (OVERVALUED)</span>
+                  </p>
                 </div>
               </motion.div>
             ))}

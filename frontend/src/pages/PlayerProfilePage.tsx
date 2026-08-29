@@ -76,6 +76,7 @@ export const PlayerProfilePage: React.FC = () => {
       {/* Back Button */}
       <button
         onClick={() => navigate(-1)}
+        aria-label="Return to previous player list page"
         className="inline-flex items-center space-x-2 text-xs font-mono text-gray-400 hover:text-white transition"
       >
         <ArrowLeft className="w-4 h-4" />
@@ -99,7 +100,10 @@ export const PlayerProfilePage: React.FC = () => {
         {/* Signal Status Badge */}
         {pred && (
           <div className={`p-4 rounded-2xl border text-right font-mono ${gap > 0 ? 'bg-signal-emerald/10 border-signal-emerald/30 text-signal-emerald' : 'bg-signal-crimson/10 border-signal-crimson/30 text-signal-crimson'}`}>
-            <p className="text-xs uppercase tracking-wider font-bold">{gap > 0 ? 'UNDERVALUED SIGNAL' : 'OVERVALUED SIGNAL'}</p>
+            <p className="text-xs uppercase tracking-wider font-bold flex items-center justify-end space-x-1">
+              {gap > 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+              <span>{gap > 0 ? 'UNDERVALUED SIGNAL' : 'OVERVALUED SIGNAL'}</span>
+            </p>
             <p className="text-2xl font-extrabold">{gap > 0 ? `+${gapPct.toFixed(1)}%` : `${gapPct.toFixed(1)}%`}</p>
           </div>
         )}

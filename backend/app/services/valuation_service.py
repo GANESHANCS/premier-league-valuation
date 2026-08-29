@@ -50,7 +50,7 @@ class ValuationService:
 
         pred_log_val = np.log1p(pred_eur)
         lower_bound = float(np.maximum(np.expm1(pred_log_val + q10_res), 0))
-        upper_bound = float(np.expm1(pred_log_val + q90_res))
+        upper_bound = float(np.maximum(np.expm1(pred_log_val + q90_res), 0))
 
         gap_eur = pred_eur - float(target_mv)
         gap_pct = (gap_eur / float(target_mv)) * 100.0 if float(target_mv) > 0 else 0.0

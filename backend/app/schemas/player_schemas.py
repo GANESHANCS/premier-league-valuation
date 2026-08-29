@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List, Dict, Any
 from datetime import date
 
@@ -9,31 +9,28 @@ class PaginationMeta(BaseModel):
     total_pages: int
 
 class ClubResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     club_id: int
     name: str
     normalized_name: str
 
-    class Config:
-        from_attributes = True
-
 class ValuationPoint(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     valuation_date: date
     market_value_eur: float
     freshness_status: str # Fresh, Recent, Stale, Unknown
     source: str
 
-    class Config:
-        from_attributes = True
-
 class TransferResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     transfer_date: date
     from_club_name: Optional[str] = None
     to_club_name: Optional[str] = None
     transfer_fee_eur: Optional[float] = None
     transfer_fee_status: str # disclosed, free_transfer, undisclosed
-
-    class Config:
-        from_attributes = True
 
 class PerformanceSummary(BaseModel):
     apps_365d: int = 0
@@ -59,6 +56,8 @@ class PredictionResponse(BaseModel):
     key_negative_factors: List[str] = []
 
 class PlayerSummaryResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     player_id: int
     name: str
     date_of_birth: Optional[date] = None
@@ -74,14 +73,13 @@ class PlayerSummaryResponse(BaseModel):
     predicted_fair_value_eur: Optional[float] = None
     valuation_gap_eur: Optional[float] = None
 
-    class Config:
-        from_attributes = True
-
 class PaginatedPlayersResponse(BaseModel):
     items: List[PlayerSummaryResponse]
     meta: PaginationMeta
 
 class PlayerDetailResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     player_id: int
     name: str
     date_of_birth: Optional[date] = None
