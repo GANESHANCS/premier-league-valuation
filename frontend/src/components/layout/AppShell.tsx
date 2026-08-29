@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import { BackgroundVideoEngine } from '../visuals/BackgroundVideoEngine';
+import { CinematicBackground } from '../visuals/CinematicBackground';
 import { InitializationScreen } from '../common/InitializationScreen';
-import { AnimatePresence, motion } from 'framer-motion';
+import { PageTransition } from '../motion/PageTransition';
+import { AnimatePresence } from 'framer-motion';
+import { fetchDashboardSummary } from '../../api/client';
+import { DashboardSummary } from '../../types/api';
 
 interface Props {
   children: React.ReactNode;
@@ -11,16 +14,23 @@ interface Props {
 
 export const AppShell: React.FC<Props> = ({ children }) => {
   const [initialized, setInitialized] = useState(false);
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+
+  useEffect(() => {
+    fetchDashboardSummary()
+      .then((data) => setSummary(data))
+      .catch((err) => console.error('Failed to load AppShell summary:', err));
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-gray-100 flex flex-col relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#05080d] text-gray-100 flex flex-col relative overflow-hidden font-sans select-none">
       <AnimatePresence>
         {!initialized && (
           <InitializationScreen onComplete={() => setInitialized(true)} />
         )}
       </AnimatePresence>
 
-      <BackgroundVideoEngine />
+      <CinematicBackground />
 
       <div className="flex flex-1 z-10 relative">
         <Sidebar />
@@ -29,24 +39,20 @@ export const AppShell: React.FC<Props> = ({ children }) => {
           <Header />
 
           <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto overflow-y-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 8, scale: 0.99 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.35, ease: 'easeOut' }}
-            >
+            <PageTransition>
               {children}
-            </motion.div>
+            </PageTransition>
           </main>
 
           {/* Bottom Persistent Intelligence Footer */}
           <footer className="h-10 border-t border-white/5 bg-background-dark/80 px-6 flex items-center justify-between text-[11px] font-mono text-gray-400 backdrop-blur-xl z-20">
             <div>
               <span>SYSTEM: </span>
-              <span className="text-signal-emerald">ONLINE ● 50,149 PLAYERS TRACKED</span>
+              <span className="text-signal-emerald">ONLINE ● {summary ? `${summary.total_players.toLocaleString()} PLAYERS TRACKED` : 'AUDITED DATASET'}</span>
             </div>
             <div className="hidden sm:block">
               <span>PROVENANCE: </span>
-              <span className="text-gray-400">THIRD-PARTY TRANSFERMARKT-DERIVED DATASET</span>
+              <span className="text-gray-400">TRANSFERMARKT HISTORICAL DATASET • XGBOOST-V1 MODEL</span>
             </div>
           </footer>
         </div>

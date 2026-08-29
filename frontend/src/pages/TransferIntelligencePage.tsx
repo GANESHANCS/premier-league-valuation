@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeftRight, Search, ChevronLeft, ChevronRight, DollarSign } from 'lucide-react';
+import { ArrowLeftRight, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchGlobalTransfers } from '../api/client';
 import { Transfer, PaginationMeta } from '../types/api';
+import { AnimatedHeadline } from '../components/motion/AnimatedHeadline';
+import { RevealOnScroll } from '../components/motion/RevealOnScroll';
 
 export const TransferIntelligencePage: React.FC = () => {
   const [transfers, setTransfers] = useState<Transfer[]>([]);
@@ -37,26 +39,18 @@ export const TransferIntelligencePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center space-x-2">
-            <h1 className="text-2xl font-bold text-white tracking-tight font-sans flex items-center space-x-2">
-              <ArrowLeftRight className="w-6 h-6 text-signal-cyan" />
-              <span>GLOBAL TRANSFER INTELLIGENCE</span>
-            </h1>
-            <span className="text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-signal-cyan/15 text-signal-cyan border border-signal-cyan/30">
-              GLOBAL DATASET (175,165 RECORDS)
-            </span>
-          </div>
-          <p className="text-xs text-gray-400 font-mono mt-1">
-            {meta ? `${meta.total.toLocaleString()} transfer events audited (${scope === 'historical' ? 'Completed Historical <= Aug 2026' : scope === 'future' ? 'Future Scheduled / Loan End Agreements' : 'All Global Timeline'})` : 'Loading transfer feed...'}
-          </p>
-        </div>
+    <div className="space-y-6 select-none">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <AnimatedHeadline
+          categoryTag="TRANSFER LOGISTICS FEED"
+          mainTitle="GLOBAL"
+          subTitle="TRANSFER INTELLIGENCE"
+          description={meta ? `${meta.total.toLocaleString()} transfer events audited (${scope === 'historical' ? 'Completed Historical' : scope === 'future' ? 'Future Scheduled / Loan Returns' : 'All Timeline Scope'})` : 'Loading live transfer log...'}
+        />
       </div>
 
       {/* Filter Controls */}
-      <div className="glass-panel p-4 rounded-2xl border border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="glass-panel p-4 rounded-3xl border border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Timeline Scope */}
         <select
           value={scope}
@@ -65,7 +59,7 @@ export const TransferIntelligencePage: React.FC = () => {
             setScope(e.target.value);
             setPage(1);
           }}
-          className="bg-background-dark/80 border border-signal-cyan/40 rounded-xl px-4 py-2 text-sm text-signal-cyan font-mono font-bold focus:outline-none focus:border-signal-cyan"
+          className="bg-background-dark/80 border border-signal-cyan/40 rounded-2xl px-4 py-2.5 text-xs text-signal-cyan font-mono font-bold focus:outline-none focus:border-signal-cyan"
         >
           <option value="historical">Historical Transfers (Completed)</option>
           <option value="future">Future / Scheduled Agreements</option>
@@ -74,7 +68,7 @@ export const TransferIntelligencePage: React.FC = () => {
 
         {/* Search */}
         <div className="relative">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
           <input
             type="text"
             aria-label="Search transfer records by player name or club"
@@ -84,7 +78,7 @@ export const TransferIntelligencePage: React.FC = () => {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="w-full bg-background-dark/80 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-signal-cyan font-mono"
+            className="w-full bg-background-dark/80 border border-white/10 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-signal-cyan font-mono"
           />
         </div>
 
@@ -96,7 +90,7 @@ export const TransferIntelligencePage: React.FC = () => {
             setStatusFilter(e.target.value);
             setPage(1);
           }}
-          className="bg-background-dark/80 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-signal-cyan font-mono"
+          className="bg-background-dark/80 border border-white/10 rounded-2xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-signal-cyan font-mono"
         >
           <option value="">All Fee Classifications</option>
           <option value="disclosed">Disclosed Fee</option>
@@ -107,50 +101,52 @@ export const TransferIntelligencePage: React.FC = () => {
 
       {/* Transfers Feed Table */}
       {loading ? (
-        <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+        <div className="h-64 bg-white/5 rounded-3xl animate-pulse" />
       ) : transfers.length === 0 ? (
-        <div className="glass-panel p-12 rounded-2xl text-center space-y-2 font-mono">
-          <p className="text-gray-400">No transfer records match query.</p>
+        <div className="glass-panel p-16 rounded-3xl text-center space-y-2 font-mono">
+          <p className="text-gray-400">No transfer records match current search criteria.</p>
         </div>
       ) : (
-        <div className="glass-panel rounded-2xl overflow-x-auto border border-white/10">
-          <table aria-label="Global historical transfer records table" className="w-full text-left font-mono text-xs">
-            <thead className="bg-white/5 text-gray-400 border-b border-white/10 uppercase">
-              <tr>
-                <th className="p-4">Date</th>
-                <th className="p-4">Player</th>
-                <th className="p-4">From Club</th>
-                <th className="p-4">To Club</th>
-                <th className="p-4 text-right">Transfer Fee</th>
-                <th className="p-4 text-center">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {transfers.map((tr) => (
-                <tr key={tr.id} className="hover:bg-white/5 transition">
-                  <td className="p-4 text-gray-400">{tr.transfer_date}</td>
-                  <td className="p-4 font-bold text-white">{tr.player_name || `Player #${tr.player_id}`}</td>
-                  <td className="p-4 text-gray-300">{tr.from_club_name || 'Free Agent / Youth'}</td>
-                  <td className="p-4 text-gray-300">{tr.to_club_name || 'Free Agent'}</td>
-                  <td className="p-4 text-right font-bold text-white">
-                    {tr.transfer_fee_status === 'disclosed' ? formatEuro(tr.transfer_fee_eur) : '—'}
-                  </td>
-                  <td className="p-4 text-center">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold border ${
-                      tr.transfer_fee_status === 'disclosed'
-                        ? 'bg-signal-cyan/10 border-signal-cyan/30 text-signal-cyan'
-                        : tr.transfer_fee_status === 'free_transfer'
-                        ? 'bg-signal-emerald/10 border-signal-emerald/30 text-signal-emerald'
-                        : 'bg-gray-800 border-gray-700 text-gray-400'
-                    }`}>
-                      {tr.transfer_fee_status}
-                    </span>
-                  </td>
+        <RevealOnScroll>
+          <div className="glass-panel rounded-3xl overflow-x-auto border border-white/10 shadow-2xl">
+            <table aria-label="Global historical transfer records table" className="w-full text-left font-mono text-xs">
+              <thead className="bg-white/5 text-gray-400 border-b border-white/10 uppercase">
+                <tr>
+                  <th className="p-4">Date</th>
+                  <th className="p-4">Player</th>
+                  <th className="p-4">From Club</th>
+                  <th className="p-4">To Club</th>
+                  <th className="p-4 text-right">Transfer Fee</th>
+                  <th className="p-4 text-center">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {transfers.map((tr) => (
+                  <tr key={tr.id} className="hover:bg-white/5 transition">
+                    <td className="p-4 text-gray-400 font-medium">{tr.transfer_date}</td>
+                    <td className="p-4 font-bold text-white hover:text-signal-cyan transition">{tr.player_name || `Player #${tr.player_id}`}</td>
+                    <td className="p-4 text-gray-300">{tr.from_club_name || 'Free Agent / Youth'}</td>
+                    <td className="p-4 text-gray-300">{tr.to_club_name || 'Free Agent'}</td>
+                    <td className="p-4 text-right font-bold text-white">
+                      {tr.transfer_fee_status === 'disclosed' ? formatEuro(tr.transfer_fee_eur) : '—'}
+                    </td>
+                    <td className="p-4 text-center">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold border ${
+                        tr.transfer_fee_status === 'disclosed'
+                          ? 'bg-signal-cyan/15 border-signal-cyan/30 text-signal-cyan'
+                          : tr.transfer_fee_status === 'free_transfer'
+                          ? 'bg-signal-emerald/15 border-signal-emerald/30 text-signal-emerald'
+                          : 'bg-gray-800 border-gray-700 text-gray-400'
+                      }`}>
+                        {tr.transfer_fee_status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </RevealOnScroll>
       )}
 
       {/* Pagination Controls */}
@@ -162,7 +158,7 @@ export const TransferIntelligencePage: React.FC = () => {
               disabled={page === 1}
               aria-label="Navigate to previous page"
               onClick={() => setPage(page - 1)}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 disabled:opacity-30 hover:bg-white/10"
+              className="p-2.5 rounded-xl bg-white/5 border border-white/10 disabled:opacity-30 hover:bg-white/10 transition"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -170,7 +166,7 @@ export const TransferIntelligencePage: React.FC = () => {
               disabled={page >= meta.total_pages}
               aria-label="Navigate to next page"
               onClick={() => setPage(page + 1)}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 disabled:opacity-30 hover:bg-white/10"
+              className="p-2.5 rounded-xl bg-white/5 border border-white/10 disabled:opacity-30 hover:bg-white/10 transition"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

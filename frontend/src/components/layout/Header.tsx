@@ -10,11 +10,19 @@ const NAV_ITEMS = [
   { path: '/model-analytics', label: 'Analytics', icon: LineChart },
 ];
 
+import { fetchDashboardSummary } from '../../api/client';
+import { DashboardSummary } from '../../types/api';
+
 export const Header: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
 
   useEffect(() => {
+    fetchDashboardSummary()
+      .then((data) => setSummary(data))
+      .catch((err) => console.error('Failed to load header metadata:', err));
+
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -35,18 +43,22 @@ export const Header: React.FC = () => {
     }
   };
 
+  const formattedValuationDate = summary?.latest_valuation_date
+    ? new Date(summary.latest_valuation_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()
+    : 'AUDITED';
+
   return (
     <header aria-label="Global application navigation header" className="h-16 bg-background-dark/80 border-b border-white/10 px-6 flex items-center justify-between sticky top-0 z-20 backdrop-blur-xl">
       {/* System Status Indicators */}
       <div className="flex items-center space-x-6 text-xs font-mono">
         <div className="flex items-center space-x-2">
           <span className="w-2 h-2 rounded-full bg-signal-emerald animate-ping" />
-          <span className="text-gray-300 font-semibold">DATA RETRIEVED</span>
-          <span className="text-gray-400 font-normal">29 AUG 2026</span>
+          <span className="text-gray-300 font-semibold">SYSTEM STATUS</span>
+          <span className="text-signal-emerald font-semibold uppercase">ONLINE</span>
         </div>
         <div className="hidden sm:flex items-center space-x-2 text-gray-400">
           <span>LATEST OBSERVED VALUATION:</span>
-          <span className="text-signal-cyan">12 JUN 2026</span>
+          <span className="text-signal-cyan font-bold">{formattedValuationDate}</span>
         </div>
       </div>
 

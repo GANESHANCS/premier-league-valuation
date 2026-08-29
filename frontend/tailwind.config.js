@@ -8,10 +8,10 @@ export default {
     extend: {
       colors: {
         background: {
-          DEFAULT: "#0b0f19",
-          dark: "#090d16",
-          card: "#111827",
-          panel: "rgba(17, 24, 39, 0.75)",
+          DEFAULT: "#05080d",
+          dark: "#080c12",
+          card: "#0f1520",
+          panel: "rgba(11, 16, 24, 0.75)",
           border: "rgba(255, 255, 255, 0.08)",
         },
         signal: {
@@ -22,14 +22,15 @@ export default {
         }
       },
       fontFamily: {
+        display: ['Syne', 'Outfit', 'sans-serif'],
         sans: ['Outfit', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       boxShadow: {
-        'glow-emerald': '0 0 20px rgba(16, 185, 129, 0.25)',
-        'glow-crimson': '0 0 20px rgba(239, 68, 68, 0.25)',
-        'glow-cyan': '0 0 20px rgba(6, 182, 212, 0.25)',
-        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+        'glow-emerald': '0 0 20px rgba(16, 185, 129, 0.15)',
+        'glow-crimson': '0 0 20px rgba(239, 68, 68, 0.15)',
+        'glow-cyan': '0 0 20px rgba(6, 182, 212, 0.15)',
+        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
       }
     },
   },

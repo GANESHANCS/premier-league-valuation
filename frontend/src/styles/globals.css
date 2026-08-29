@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,33 +7,42 @@
 @layer base {
   body {
     @apply bg-background text-gray-100 font-sans antialiased overflow-x-hidden selection:bg-signal-cyan/30 selection:text-signal-cyan;
-    background-color: #0b0f19;
+    background-color: #05080d;
+  }
+
+  h1, h2, h3, .font-editorial {
+    font-family: 'Syne', 'Outfit', sans-serif;
   }
 }
 
 .glass-panel {
-  background: rgba(17, 24, 39, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(11, 16, 24, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-hover:hover {
-  background: rgba(31, 41, 55, 0.75);
+  background: rgba(18, 25, 38, 0.85);
   border-color: rgba(6, 182, 212, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.7);
 }
 
 .grid-pattern {
-  background-size: 32px 32px;
+  background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+.text-stroke-cyan {
+  -webkit-text-stroke: 1px rgba(6, 182, 212, 0.4);
+  color: transparent;
 }
 
 /* Custom Scrollbars */
@@ -43,7 +52,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #05080d;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -53,4 +62,17 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(6, 182, 212, 0.5);
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  animation: ticker 40s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
 }
