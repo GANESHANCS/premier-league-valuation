@@ -12,12 +12,12 @@ const NAV_ITEMS = [
 
 export const Sidebar: React.FC = () => {
   return (
-    <aside aria-label="Main navigation sidebar" className="w-64 bg-background-dark/95 border-r border-white/10 flex flex-col justify-between hidden md:flex z-30 select-none backdrop-blur-xl">
+    <aside aria-label="Main navigation sidebar" className="w-64 bg-[#05080d]/90 border-r border-white/10 flex flex-col justify-between hidden md:flex z-30 select-none backdrop-blur-xl">
       <div>
         {/* Brand Header */}
         <div className="p-6 border-b border-white/5 flex items-center space-x-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-signal-cyan to-signal-emerald p-0.5 shadow-glow-cyan">
-            <div className="w-full h-full bg-background-dark rounded-[10px] flex items-center justify-center">
+            <div className="w-full h-full bg-[#05080d] rounded-[10px] flex items-center justify-center">
               <ShieldCheck className="w-5 h-5 text-signal-cyan" />
             </div>
           </div>
@@ -28,7 +28,7 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* Navigation Items */}
-        <nav aria-label="Sidebar main navigation" className="p-4 space-y-1">
+        <nav aria-label="Sidebar main navigation" className="p-4 space-y-1.5">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             return (
@@ -39,7 +39,7 @@ export const Sidebar: React.FC = () => {
                 className={({ isActive }) =>
                   `flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
                     isActive
-                      ? 'bg-signal-cyan/15 text-signal-cyan border border-signal-cyan/30 shadow-glow-cyan/20'
+                      ? 'bg-signal-cyan/15 text-signal-cyan border-l-2 border-signal-cyan shadow-sm'
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`
                 }
@@ -60,7 +60,7 @@ export const Sidebar: React.FC = () => {
         </div>
         <div className="flex items-center justify-between">
           <span>TEST WAPE</span>
-          <span className="text-signal-emerald">12.89%</span>
+          <span className="text-signal-emerald">14.86%</span>
         </div>
       </div>
     </aside>

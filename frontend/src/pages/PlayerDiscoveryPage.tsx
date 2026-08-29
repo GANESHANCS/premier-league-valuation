@@ -183,8 +183,9 @@ export const PlayerDiscoveryPage: React.FC = () => {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') navigate(`/players/${p.player_id}`);
                   }}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  className="glass-panel p-5 rounded-3xl cursor-pointer space-y-4 flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-signal-cyan/50 border border-white/10 hover:border-signal-cyan/40 transition"
+                  whileHover={{ y: -3 }}
+                  transition={{ duration: 0.2 }}
+                  className="glass-panel p-5 rounded-3xl cursor-pointer space-y-4 flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-signal-cyan/50 border border-white/10 hover:border-signal-cyan/40 hover:bg-[#0f1520]/90 transition-all duration-300"
                 >
                   <div>
                     <div className="flex items-start justify-between">

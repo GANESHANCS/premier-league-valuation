@@ -15,12 +15,12 @@ export const AnimatedHeadline: React.FC<Props> = ({
   description,
 }) => {
   return (
-    <div className="space-y-2 select-none">
+    <div className="space-y-3 select-none">
       {categoryTag && (
         <motion.div
-          initial={{ opacity: 0, y: 6 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           className="flex items-center space-x-2"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-signal-cyan animate-pulse" />
@@ -32,10 +32,10 @@ export const AnimatedHeadline: React.FC<Props> = ({
 
       <div className="overflow-hidden">
         <motion.h1
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-display text-white leading-none uppercase"
+          transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight font-display text-white leading-none uppercase drop-shadow-md"
         >
           {mainTitle}
         </motion.h1>
@@ -44,9 +44,9 @@ export const AnimatedHeadline: React.FC<Props> = ({
       {subTitle && (
         <div className="overflow-hidden">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
             className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight font-display text-gray-300 uppercase"
           >
             {subTitle}
@@ -56,10 +56,10 @@ export const AnimatedHeadline: React.FC<Props> = ({
 
       {description && (
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-xs sm:text-sm text-gray-400 font-mono max-w-2xl mt-2 leading-relaxed"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="text-xs sm:text-sm text-gray-300 font-mono max-w-2xl mt-2 leading-relaxed"
         >
           {description}
         </motion.p>

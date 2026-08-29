@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, Users, DollarSign, Activity, Cpu, ArrowRight, ShieldCheck } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, DollarSign, Activity, Cpu, ArrowRight, ShieldCheck, Database } from 'lucide-react';
 import { fetchDashboardSummary } from '../api/client';
 import { DashboardSummary } from '../types/api';
 import { AnimatedHeadline } from '../components/motion/AnimatedHeadline';
@@ -42,7 +42,7 @@ export const DashboardPage: React.FC = () => {
 
   if (error || !summary) {
     return (
-      <div className="p-8 rounded-3xl bg-[#080c12]/80 backdrop-blur-md border border-signal-crimson/30 text-center space-y-4">
+      <div className="p-8 rounded-3xl bg-[#080c12]/90 backdrop-blur-md border border-signal-crimson/30 text-center space-y-4">
         <div className="w-12 h-12 rounded-2xl bg-signal-crimson/10 text-signal-crimson mx-auto flex items-center justify-center">
           <Activity className="w-6 h-6 animate-pulse" />
         </div>
@@ -68,25 +68,34 @@ export const DashboardPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 select-none">
+    <div className="space-y-10 select-none">
       {/* Live Broadcast Ticker */}
       <LiveTicker items={tickerItems} />
 
-      {/* Cinematic Hero Section — Positioned to Left/Center to reveal Footballer on Right */}
-      <div className="relative p-8 md:p-12 rounded-3xl bg-[#080c12]/60 backdrop-blur-sm border border-white/10 shadow-2xl">
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Left Column: Hero Content & Typography */}
+      {/* Hero Section — Directly over left-side background gradient (UNBOXED so Footballer on Right is 100% visible) */}
+      <div className="relative py-4 md:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Left Column: Hero Content & Broadcast Typography (60% width max) */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full bg-signal-cyan/15 border border-signal-cyan/30 text-signal-cyan text-[11px] font-mono font-bold tracking-widest uppercase flex items-center space-x-1.5">
-                <Cpu className="w-3.5 h-3.5" />
-                <span>MODEL: {summary.model_version}</span>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="flex flex-wrap items-center gap-2 text-xs font-mono"
+            >
+              <span className="px-3 py-1 rounded-full bg-signal-emerald/15 border border-signal-emerald/30 text-signal-emerald text-[11px] font-bold tracking-widest uppercase flex items-center space-x-1.5">
+                <span className="w-2 h-2 rounded-full bg-signal-emerald animate-pulse" />
+                <span>SYSTEM ONLINE</span>
               </span>
-              <span className="px-3 py-1 rounded-full bg-signal-emerald/15 border border-signal-emerald/30 text-signal-emerald text-[11px] font-mono font-bold tracking-widest uppercase flex items-center space-x-1.5">
-                <ShieldCheck className="w-3.5 h-3.5" />
+              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300 text-[11px] font-bold tracking-widest uppercase flex items-center space-x-1.5">
+                <Cpu className="w-3.5 h-3.5 text-signal-cyan" />
+                <span>{summary.model_version}</span>
+              </span>
+              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300 text-[11px] font-bold tracking-widest uppercase flex items-center space-x-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-signal-emerald" />
                 <span>TEST WAPE: {summary.model_out_of_time_wape_pct}%</span>
               </span>
-            </div>
+            </motion.div>
 
             <AnimatedHeadline
               categoryTag="VALUATION INTELLIGENCE PLATFORM"
@@ -95,32 +104,70 @@ export const DashboardPage: React.FC = () => {
               description="Machine-learning player market valuation built from historical market values, performance statistics, transfer movements, and temporal features using strict anti-leakage governance."
             />
 
-            <div className="pt-2 flex flex-wrap gap-4 text-xs font-mono">
+            {/* Broadcast Technical Metadata Stream */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="flex flex-wrap items-center gap-6 pt-1 text-xs font-mono text-gray-300"
+            >
+              <div className="flex items-center space-x-2">
+                <Users className="w-4 h-4 text-signal-cyan" />
+                <span className="font-bold text-white"><AnimatedCounter value={summary.total_players} /></span>
+                <span className="text-gray-400">PLAYERS</span>
+              </div>
+              <div className="w-1 h-1 rounded-full bg-white/20" />
+              <div className="flex items-center space-x-2">
+                <Database className="w-4 h-4 text-signal-emerald" />
+                <span className="font-bold text-white"><AnimatedCounter value={summary.total_valuations} /></span>
+                <span className="text-gray-400">VALUATIONS</span>
+              </div>
+              <div className="w-1 h-1 rounded-full bg-white/20" />
+              <div className="flex items-center space-x-2">
+                <Activity className="w-4 h-4 text-signal-cyan" />
+                <span className="font-bold text-white">{summary.model_out_of_time_r2}</span>
+                <span className="text-gray-400">$R^2$ ACCURACY</span>
+              </div>
+            </motion.div>
+
+            {/* Action CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.0 }}
+              className="pt-3 flex flex-wrap gap-4 text-xs font-mono"
+            >
               <button
                 onClick={() => navigate('/players')}
-                className="px-6 py-3 rounded-xl bg-signal-cyan/20 border border-signal-cyan/40 text-signal-cyan font-bold hover:bg-signal-cyan/30 transition flex items-center space-x-2"
+                className="px-6 py-3 rounded-xl bg-signal-cyan/20 border border-signal-cyan/40 text-signal-cyan font-bold hover:bg-signal-cyan/30 hover:-translate-y-0.5 transition-all duration-200 flex items-center space-x-2 shadow-lg"
               >
                 <span>EXPLORE PLAYERS</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button
                 onClick={() => navigate('/model-analytics')}
-                className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition"
+                className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 hover:-translate-y-0.5 transition-all duration-200"
               >
                 <span>MODEL METRICS</span>
               </button>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Right Column: Open Space allowing the stadium footballer to show through unobstructed */}
+          {/* Right Column: Completely open viewport space (40% width) for the stadium footballer to walk unobstructed */}
           <div className="lg:col-span-5 hidden lg:block" />
         </div>
       </div>
 
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent" />
+
       {/* Real Aggregate Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <RevealOnScroll delay={0.05}>
-          <div className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 space-y-2">
+          <motion.div
+            whileHover={{ y: -3 }}
+            className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 hover:border-white/20 hover:bg-[#0f1520]/90 transition-all duration-300 space-y-2 shadow-xl"
+          >
             <div className="flex items-center justify-between text-gray-400 text-xs font-mono">
               <span>PLAYERS TRACKED</span>
               <Users className="w-4 h-4 text-signal-cyan" />
@@ -129,11 +176,14 @@ export const DashboardPage: React.FC = () => {
               <AnimatedCounter value={summary.total_players} />
             </p>
             <p className="text-[11px] text-gray-400 font-mono">Premier League & Global Scope</p>
-          </div>
+          </motion.div>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.1}>
-          <div className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 space-y-2">
+          <motion.div
+            whileHover={{ y: -3 }}
+            className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 hover:border-white/20 hover:bg-[#0f1520]/90 transition-all duration-300 space-y-2 shadow-xl"
+          >
             <div className="flex items-center justify-between text-gray-400 text-xs font-mono">
               <span>HISTORICAL VALUATIONS</span>
               <DollarSign className="w-4 h-4 text-signal-emerald" />
@@ -142,11 +192,14 @@ export const DashboardPage: React.FC = () => {
               <AnimatedCounter value={summary.total_valuations} />
             </p>
             <p className="text-[11px] text-gray-400 font-mono">Latest: {summary.latest_valuation_date}</p>
-          </div>
+          </motion.div>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.15}>
-          <div className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 space-y-2">
+          <motion.div
+            whileHover={{ y: -3 }}
+            className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 hover:border-white/20 hover:bg-[#0f1520]/90 transition-all duration-300 space-y-2 shadow-xl"
+          >
             <div className="flex items-center justify-between text-gray-400 text-xs font-mono">
               <span>TEST WAPE SCORE</span>
               <Activity className="w-4 h-4 text-signal-cyan" />
@@ -155,11 +208,14 @@ export const DashboardPage: React.FC = () => {
               {summary.model_out_of_time_wape_pct}%
             </p>
             <p className="text-[11px] text-gray-400 font-mono">Out-of-Time Held-Out Test Set</p>
-          </div>
+          </motion.div>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.2}>
-          <div className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 space-y-2">
+          <motion.div
+            whileHover={{ y: -3 }}
+            className="p-6 rounded-2xl bg-[#080c12]/80 backdrop-blur-md border border-white/10 hover:border-white/20 hover:bg-[#0f1520]/90 transition-all duration-300 space-y-2 shadow-xl"
+          >
             <div className="flex items-center justify-between text-gray-400 text-xs font-mono">
               <span>MODEL $R^2$ VARIANCE</span>
               <Cpu className="w-4 h-4 text-signal-cyan" />
@@ -168,7 +224,7 @@ export const DashboardPage: React.FC = () => {
               {summary.model_out_of_time_r2}
             </p>
             <p className="text-[11px] text-gray-400 font-mono">Out-of-Time Test Set</p>
-          </div>
+          </motion.div>
         </RevealOnScroll>
       </div>
 
@@ -176,7 +232,7 @@ export const DashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Undervalued */}
         <RevealOnScroll delay={0.25}>
-          <div className="p-6 rounded-3xl bg-[#080c12]/85 backdrop-blur-md border border-signal-emerald/20 space-y-4">
+          <div className="p-6 rounded-3xl bg-[#080c12]/85 backdrop-blur-md border border-signal-emerald/20 space-y-4 shadow-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <TrendingUp className="w-5 h-5 text-signal-emerald" />
@@ -198,8 +254,9 @@ export const DashboardPage: React.FC = () => {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') navigate(`/players/${p.player_id}`);
                   }}
-                  whileHover={{ scale: 1.01, x: 2 }}
-                  className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-signal-emerald/50"
+                  whileHover={{ y: -3, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
+                  transition={{ duration: 0.2 }}
+                  className="p-4 rounded-2xl bg-white/5 border border-white/5 cursor-pointer flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-signal-emerald/50"
                 >
                   <div>
                     <h3 className="font-bold text-white text-sm hover:text-signal-cyan transition">{p.name}</h3>
@@ -221,7 +278,7 @@ export const DashboardPage: React.FC = () => {
 
         {/* Top Overvalued */}
         <RevealOnScroll delay={0.3}>
-          <div className="p-6 rounded-3xl bg-[#080c12]/85 backdrop-blur-md border border-signal-crimson/20 space-y-4">
+          <div className="p-6 rounded-3xl bg-[#080c12]/85 backdrop-blur-md border border-signal-crimson/20 space-y-4 shadow-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <TrendingDown className="w-5 h-5 text-signal-crimson" />
@@ -243,8 +300,9 @@ export const DashboardPage: React.FC = () => {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') navigate(`/players/${p.player_id}`);
                   }}
-                  whileHover={{ scale: 1.01, x: 2 }}
-                  className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-signal-crimson/50"
+                  whileHover={{ y: -3, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
+                  transition={{ duration: 0.2 }}
+                  className="p-4 rounded-2xl bg-white/5 border border-white/5 cursor-pointer flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-signal-crimson/50"
                 >
                   <div>
                     <h3 className="font-bold text-white text-sm hover:text-signal-cyan transition">{p.name}</h3>
