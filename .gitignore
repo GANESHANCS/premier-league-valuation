@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Data caches (raw downloaded data preserved locally)
+data/raw/
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
