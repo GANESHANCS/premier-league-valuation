@@ -20,7 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy backend application code & scripts
 COPY backend ./backend
-COPY data/processed/ml/best_model.joblib ./data/processed/ml/best_model.joblib
+COPY data/processed/ml ./data/processed/ml
 COPY scripts ./scripts
 
 # Expose port

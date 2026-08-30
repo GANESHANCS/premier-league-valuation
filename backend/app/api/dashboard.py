@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func, desc, asc
@@ -10,6 +12,9 @@ from backend.app.core.config import settings
 from backend.app.services.player_service import PlayerService
 
 router = APIRouter()
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+ML_DATA_DIR = BASE_DIR / "data" / "processed" / "ml"
 
 @router.get("/summary", summary="Get Dashboard Summary Statistics", tags=["Dashboard"])
 def get_dashboard_summary(db: Session = Depends(get_db)) -> Dict[str, Any]:
@@ -57,14 +62,29 @@ def get_dashboard_summary(db: Session = Depends(get_db)) -> Dict[str, Any]:
                 "signal": "OVERVALUED"
             })
 
+    # Load authoritative ML model evaluation metrics from summary file
+    summary_path = ML_DATA_DIR / "phase3_model_summary.json"
+    summary_data = json.loads(summary_path.read_text()) if summary_path.exists() else {}
+
+    test_results = summary_data.get("test_results", {})
+    test_wape = test_results.get("WAPE", 0.1289)
+    test_r2 = test_results.get("R2", 0.9457)
+
+    val_results = summary_data.get("validation_results", {}).get("XGBoost", {})
+    cv_wape = val_results.get("WAPE", 0.1520)
+    cv_r2 = val_results.get("R2", 0.9577)
+
     return {
         "total_players": total_players,
         "total_valuations": total_valuations,
         "total_transfers": total_transfers,
         "latest_valuation_date": latest_val_date,
         "model_version": settings.MODEL_VERSION,
-        "model_out_of_time_wape_pct": 14.86,
-        "model_out_of_time_r2": 0.9542,
+        "model_out_of_time_wape_pct": round(test_wape * 100, 2),
+        "model_out_of_time_r2": round(test_r2, 4),
+        "model_cv_wape_pct": round(cv_wape * 100, 2),
+        "model_cv_r2": round(cv_r2, 4),
         "top_undervalued": top_undervalued,
         "top_overvalued": top_overvalued
     }
+

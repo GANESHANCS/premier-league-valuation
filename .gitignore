@@ -22,6 +22,9 @@ data/processed/*
 !data/processed/ml/
 data/processed/ml/*
 !data/processed/ml/best_model.joblib
+!data/processed/ml/phase3_model_summary.json
+!data/processed/ml/phase3_explainability_report.json
+!data/processed/ml/phase3_error_analysis.json
 
 
 # Frontend Node Modules & Build Output

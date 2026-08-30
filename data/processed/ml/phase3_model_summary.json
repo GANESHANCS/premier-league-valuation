@@ -1,0 +1,115 @@
+{
+  "best_model_name": "XGBoost",
+  "cv_results": {
+    "Ridge_Regression": {
+      "cv_mean_rmse_eur": 104844489919.09836,
+      "cv_std_rmse_eur": 175434274558.25143
+    },
+    "ElasticNet_Regression": {
+      "cv_mean_rmse_eur": 180577993485.6559,
+      "cv_std_rmse_eur": 359271409349.1997
+    },
+    "Random_Forest": {
+      "cv_mean_rmse_eur": 3364302.1725936807,
+      "cv_std_rmse_eur": 1105765.5767083704
+    },
+    "LightGBM": {
+      "cv_mean_rmse_eur": 3513260.4962953525,
+      "cv_std_rmse_eur": 1252413.0601605987
+    },
+    "XGBoost": {
+      "cv_mean_rmse_eur": 3375399.013671755,
+      "cv_std_rmse_eur": 1146859.3481826384
+    }
+  },
+  "validation_results": {
+    "Ridge_Regression": {
+      "MAE_EUR": 11924165.197350001,
+      "RMSE_EUR": 129956049.69588822,
+      "MedAE_EUR": 941681.9389707624,
+      "R2": -68.36399855746147,
+      "WAPE": 1.3169640824909268,
+      "Log_MAE": 0.768646977870119,
+      "Log_RMSE": 0.9678552177019029
+    },
+    "ElasticNet_Regression": {
+      "MAE_EUR": 14595306.183204928,
+      "RMSE_EUR": 307629715.10006344,
+      "MedAE_EUR": 893001.6184003949,
+      "R2": -387.6849133928798,
+      "WAPE": 1.6119781718983877,
+      "Log_MAE": 0.8441464077645097,
+      "Log_RMSE": 1.043758537836602
+    },
+    "Random_Forest": {
+      "MAE_EUR": 1437645.677965915,
+      "RMSE_EUR": 3193840.6102038166,
+      "MedAE_EUR": 320237.8244786534,
+      "R2": 0.9581044790604899,
+      "WAPE": 0.15878073558140543,
+      "Log_MAE": 0.2704963459086556,
+      "Log_RMSE": 0.4164420319183785
+    },
+    "LightGBM": {
+      "MAE_EUR": 1387969.546344515,
+      "RMSE_EUR": 3279551.3242296907,
+      "MedAE_EUR": 321648.5255629271,
+      "R2": 0.9558256689747398,
+      "WAPE": 0.15329425665229643,
+      "Log_MAE": 0.2574551669924229,
+      "Log_RMSE": 0.400426143901834
+    },
+    "XGBoost": {
+      "MAE_EUR": 1376134.2699341478,
+      "RMSE_EUR": 3210600.952168174,
+      "MedAE_EUR": 310112.75,
+      "R2": 0.9576636144276612,
+      "WAPE": 0.15198710988932895,
+      "Log_MAE": 0.2563791393137693,
+      "Log_RMSE": 0.3983016414323642
+    }
+  },
+  "test_results": {
+    "MAE_EUR": 2255249.9242634946,
+    "RMSE_EUR": 4950696.249907354,
+    "MedAE_EUR": 877417.5,
+    "R2": 0.9457399420825743,
+    "WAPE": 0.12894916180721508,
+    "Log_MAE": 0.20903617869321947,
+    "Log_RMSE": 0.3457421026548
+  },
+  "features": [
+    "age_at_valuation",
+    "age_squared",
+    "height_in_cm",
+    "apps_365d",
+    "starts_365d",
+    "minutes_365d",
+    "goals_365d",
+    "assists_365d",
+    "yellows_365d",
+    "reds_365d",
+    "goals_per90_365d",
+    "assists_per90_365d",
+    "contribs_per90_365d",
+    "career_apps_prior",
+    "career_minutes_prior",
+    "career_goals_prior",
+    "career_assists_prior",
+    "prev_market_value_eur",
+    "days_since_prev_val",
+    "hist_max_value_eur",
+    "hist_min_value_eur",
+    "val_count_prior",
+    "val_change_365d",
+    "val_growth_ratio_365d",
+    "prev_transfer_fee_eur",
+    "days_since_prev_transfer",
+    "total_prior_transfers",
+    "main_position",
+    "sub_position",
+    "foot",
+    "prev_transfer_fee_status",
+    "height_imputed"
+  ]
+}

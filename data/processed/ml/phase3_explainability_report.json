@@ -1,0 +1,133 @@
+{
+  "top_features": [
+    {
+      "feature": "prev_market_value_eur",
+      "importance_mean": 1.367870231600225,
+      "importance_std": 0.03858660177252401
+    },
+    {
+      "feature": "val_count_prior",
+      "importance_mean": 0.07422079410624212,
+      "importance_std": 0.002008100256184254
+    },
+    {
+      "feature": "prev_transfer_fee_eur",
+      "importance_mean": 0.031881620280177846,
+      "importance_std": 0.003019029167289726
+    },
+    {
+      "feature": "total_prior_transfers",
+      "importance_mean": 0.006067768346640956,
+      "importance_std": 0.0005263795854811227
+    },
+    {
+      "feature": "apps_365d",
+      "importance_mean": 0.004299809803060506,
+      "importance_std": 0.0012822011754965114
+    },
+    {
+      "feature": "age_at_valuation",
+      "importance_mean": 0.003955052244767621,
+      "importance_std": 0.0002068220392626124
+    },
+    {
+      "feature": "minutes_365d",
+      "importance_mean": 0.003935096272201855,
+      "importance_std": 0.0004654755844748035
+    },
+    {
+      "feature": "val_change_365d",
+      "importance_mean": 0.003773461570804937,
+      "importance_std": 0.0006526107062622592
+    },
+    {
+      "feature": "days_since_prev_val",
+      "importance_mean": 0.0025671175256696266,
+      "importance_std": 0.00019058619746170359
+    },
+    {
+      "feature": "days_since_prev_transfer",
+      "importance_mean": 0.0017927613029475654,
+      "importance_std": 0.0006168647183689778
+    },
+    {
+      "feature": "age_squared",
+      "importance_mean": 0.0014315334527609691,
+      "importance_std": 0.00023167548222231298
+    },
+    {
+      "feature": "starts_365d",
+      "importance_mean": 0.0013307015755111395,
+      "importance_std": 0.00016200325930401581
+    },
+    {
+      "feature": "goals_per90_365d",
+      "importance_mean": 0.0011519936853279678,
+      "importance_std": 0.0001704751311272275
+    },
+    {
+      "feature": "main_position",
+      "importance_mean": 0.0010854848934793494,
+      "importance_std": 0.00044593940216961723
+    },
+    {
+      "feature": "val_growth_ratio_365d",
+      "importance_mean": 0.0009228542795101325,
+      "importance_std": 0.0001813900611524547
+    }
+  ],
+  "uncertainty_quantile_residuals_log": {
+    "p10": -0.3801652736051615,
+    "p90": 0.363300393320408
+  },
+  "sample_explanations": [
+    {
+      "player_id": 211076,
+      "valuation_date": "2022-07-01",
+      "observed_market_value_eur": 50000.0,
+      "predicted_fair_value_eur": 126085.7265625,
+      "prediction_interval_80_pct": [
+        86210.609375,
+        181320.234375
+      ],
+      "valuation_gap_eur": 76085.7265625,
+      "key_positive_factors": [],
+      "key_negative_factors": [
+        "Limited trailing playing time (0 mins)"
+      ]
+    },
+    {
+      "player_id": 339789,
+      "valuation_date": "2022-07-01",
+      "observed_market_value_eur": 150000.0,
+      "predicted_fair_value_eur": 308882.78125,
+      "prediction_interval_80_pct": [
+        211197.828125,
+        444194.78125
+      ],
+      "valuation_gap_eur": 158882.78125,
+      "key_positive_factors": [
+        "Prime peak age profile (24.7 yrs)"
+      ],
+      "key_negative_factors": [
+        "Limited trailing playing time (0 mins)",
+        "Stale previous valuation (219 days old)"
+      ]
+    },
+    {
+      "player_id": 811779,
+      "valuation_date": "2022-07-01",
+      "observed_market_value_eur": 2000000.0,
+      "predicted_fair_value_eur": 375810.34375,
+      "prediction_interval_80_pct": [
+        256959.4375,
+        540441.125
+      ],
+      "valuation_gap_eur": -1624189.65625,
+      "key_positive_factors": [],
+      "key_negative_factors": [
+        "Limited trailing playing time (12 mins)"
+      ]
+    }
+  ]
+}
