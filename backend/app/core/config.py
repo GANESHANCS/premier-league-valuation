@@ -1,6 +1,7 @@
 import os
+import json
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Union
 from pydantic import ConfigDict, field_validator
 from pydantic_settings import BaseSettings
 
@@ -25,8 +26,8 @@ class Settings(BaseSettings):
     MODEL_PATH: str = os.getenv("MODEL_PATH", str(DEFAULT_MODEL_PATH))
     MODEL_VERSION: str = "xgboost-v1"
     
-    # CORS origins: parsed from comma-separated string or list
-    CORS_ORIGINS: list[str] = [
+    # CORS origins: supports comma-separated string from env or list of strings
+    CORS_ORIGINS: Union[str, List[str]] = [
         "http://localhost:3000",
         "http://localhost:5173",
         "http://127.0.0.1:3000",
@@ -36,9 +37,20 @@ class Settings(BaseSettings):
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
-    def assemble_cors_origins(cls, v: Any) -> list[str]:
+    def assemble_cors_origins(cls, v: Any) -> List[str]:
         if isinstance(v, str):
-            origins = [i.strip() for i in v.split(",") if i.strip()]
+            v_str = v.strip()
+            if v_str.startswith("[") and v_str.endswith("]"):
+                try:
+                    parsed = json.loads(v_str)
+                    if isinstance(parsed, list):
+                        origins = [str(i).strip() for i in parsed if str(i).strip()]
+                    else:
+                        origins = [v_str]
+                except Exception:
+                    origins = [i.strip() for i in v_str.split(",") if i.strip()]
+            else:
+                origins = [i.strip() for i in v_str.split(",") if i.strip()]
         elif isinstance(v, list):
             origins = [str(i).strip() for i in v if str(i).strip()]
         else:
@@ -50,4 +62,3 @@ class Settings(BaseSettings):
         return origins
 
 settings = Settings()
-
