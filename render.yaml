@@ -4,7 +4,7 @@ services:
     name: pl-valuedge-backend
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "python scripts/load_database.py && uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT"
+    startCommand: "python scripts/download_database.py && uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT"
     healthCheckPath: /api/health
     envVars:
       - key: ENVIRONMENT
@@ -19,12 +19,12 @@ services:
         value: data/processed/ml/best_model.joblib
       - key: MODEL_VERSION
         value: xgboost-v1
-      - key: CORS_ORIGINS
-        value: "https://pl-valuedge-frontend.onrender.com,http://localhost:3000"
       - key: DATABASE_URL
-        fromDatabase:
-          name: pl-valuedge-db
-          property: connectionString
+        value: sqlite:///data/pl_valuation.db
+      - key: DATABASE_DOWNLOAD_URL
+        sync: false
+      - key: CORS_ORIGINS
+        value: "https://pl-valuedge-frontend.onrender.com,http://localhost:3000,https://ganeshancs.github.io"
 
   # React / Vite PWA Frontend Static Site
   - type: web
@@ -39,11 +39,3 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
-
-databases:
-  # Managed PostgreSQL Database
-  - name: pl-valuedge-db
-    databaseName: valuedge_db
-    user: valuedge_user
-    plan: free
-

@@ -16,6 +16,8 @@ data/raw/
 
 # Generated datasets / local database
 data/pl_valuation.db
+data/pl_valuation.db.backup
+data/pl_valuation.db.gz
 data/processed/*
 !data/processed/ml/
 data/processed/ml/*

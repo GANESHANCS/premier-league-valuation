@@ -13,3 +13,5 @@ frontend/dist
 docs
 venv
 *.db
+*.db.backup
+*.db.gz

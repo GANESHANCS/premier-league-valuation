@@ -8,10 +8,9 @@ ENV ENVIRONMENT=production
 
 WORKDIR /app
 
-# Install system dependencies for build & PostgreSQL connectivity
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libpq-dev \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -19,9 +18,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend application code
+# Copy backend application code & scripts
 COPY backend ./backend
-COPY data/processed ./data/processed
+COPY data/processed/ml/best_model.joblib ./data/processed/ml/best_model.joblib
 COPY scripts ./scripts
 
 # Expose port
@@ -29,7 +28,7 @@ EXPOSE 8000
 
 # Container Health Check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-  CMD curl -f http://localhost:8000/api/health || exit 1
+  CMD curl -f http://localhost:${PORT:-8000}/api/health || exit 1
 
-# Start Uvicorn Server
-CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start Uvicorn Server with Database Acquisition Pipeline
+CMD ["sh", "-c", "python scripts/download_database.py && uvicorn backend.app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

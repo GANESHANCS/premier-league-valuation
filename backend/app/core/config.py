@@ -26,7 +26,13 @@ class Settings(BaseSettings):
     MODEL_VERSION: str = "xgboost-v1"
     
     # CORS origins: parsed from comma-separated string or list
-    CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:5173"]
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "https://ganeshancs.github.io",
+    ]
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
