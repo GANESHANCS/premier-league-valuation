@@ -62,11 +62,17 @@ def test_model_analytics_endpoint():
     data = response.json()
     assert "out_of_time_test_metrics" in data
     assert "feature_importances" in data
+    assert isinstance(data["feature_importances"], list)
+    assert len(data["feature_importances"]) > 0, "feature_importances array must not be empty!"
+    first_feat = data["feature_importances"][0]
+    assert "feature" in first_feat
+    assert "importance_mean" in first_feat
+
     test_metrics = data["out_of_time_test_metrics"]
     assert round(test_metrics["WAPE"], 4) == 0.1289
     assert round(test_metrics["R2"], 4) == 0.9457
     assert round(test_metrics["MAE_EUR"], 2) == 2255249.92
-    print(f"[TEST PASS] GET /api/model/analytics - {duration_ms:.2f} ms (Authoritative Test WAPE: {test_metrics['WAPE']*100:.2f}%, R2: {test_metrics['R2']:.4f})")
+    print(f"[TEST PASS] GET /api/model/analytics - {duration_ms:.2f} ms (Feature Importances Count: {len(data['feature_importances'])}, Top Feature: '{first_feat['feature']}')")
 
 def test_list_players_endpoint():
     start = time.time()
