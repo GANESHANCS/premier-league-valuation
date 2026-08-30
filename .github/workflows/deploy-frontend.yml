@@ -42,7 +42,7 @@ jobs:
       - name: Build frontend PWA
         working-directory: ./frontend
         env:
-          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || secrets.VITE_API_BASE_URL || 'https://sleeps-franklin-continuity-hereby.trycloudflare.com/api' }}
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
         run: npm run build
 
       - name: Create SPA 404 fallback for GitHub Pages

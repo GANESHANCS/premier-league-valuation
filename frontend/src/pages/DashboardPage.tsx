@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Users, DollarSign, Activity, Cpu, ArrowRight, ShieldCheck, Database } from 'lucide-react';
-import { fetchDashboardSummary } from '../api/client';
+import { fetchDashboardSummary, API_BASE_URL } from '../api/client';
 import { DashboardSummary } from '../types/api';
 import { AnimatedHeadline } from '../components/motion/AnimatedHeadline';
 import { AnimatedCounter } from '../components/motion/AnimatedCounter';
@@ -47,7 +47,7 @@ export const DashboardPage: React.FC = () => {
           <Activity className="w-6 h-6 animate-pulse" />
         </div>
         <h2 className="text-xl font-bold text-white font-mono">{error || 'Failed to load data.'}</h2>
-        <p className="text-xs text-gray-400 font-mono">Ensure FastAPI backend is running at http://127.0.0.1:8000</p>
+        <p className="text-xs text-gray-400 font-mono">Ensure backend API engine is accessible ({API_BASE_URL})</p>
       </div>
     );
   }
